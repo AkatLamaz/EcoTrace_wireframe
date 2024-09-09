@@ -7,6 +7,7 @@ class SideMenuItem extends StatelessWidget {
   final String itemName;
   final Function() onTap;
 
+  // ignore: use_super_parameters
   const SideMenuItem({Key? key, required this.itemName, required this.onTap})
       : super(key: key);
 

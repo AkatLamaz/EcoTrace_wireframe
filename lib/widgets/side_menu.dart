@@ -10,7 +10,7 @@ import 'side_menu_item.dart';
 
 
 class SideMenu extends StatelessWidget {
-  const SideMenu({ Key? key }) : super(key: key);
+  const SideMenu({ super.key });
 
    @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class SideMenu extends StatelessWidget {
                         SizedBox(width: width / 48),
                         Padding(
                           padding: const EdgeInsets.only(right: 12),
-                          child: Image.asset("assets/icons/logo.png", width: 28, height: 28, cacheHeight: 28, cacheWidth: 28, ),
+                          child: Image.asset("assets/icons/logo_64.png", width: 28, height: 28, cacheHeight: 28, cacheWidth: 28, ),
                         ),
                         Flexible(
                           child: CustomText(
@@ -54,19 +54,21 @@ class SideMenu extends StatelessWidget {
 
             Column(
               mainAxisSize: MainAxisSize.min,
-              children: sideMenuItems.map((itemName) => SideMenuItem(
-                itemName: itemName == AuthentitcationPageRoute ? "Log out" : itemName,
+              children: sideMenuItems.map((item) => SideMenuItem(
+                itemName: item.name,
                 onTap: (){
-                  if(itemName == AuthentitcationPageRoute){
-                    // TODO :: auth page
+                  if(item.route == AuthentitcationPageRoute){
+                    menuController.changeActiveitemTo(OverViewPageDisplayName);
+                    Get.offAllNamed(AuthentitcationPageRoute);
+                    //Get.offAll(() => AuthenticationPage()); old method
                   }
 
-                  if(!menuController.isActive(itemName)){
-                    menuController.changeActiveitemTo(itemName);
+                  if(!menuController.isActive(item.name)){
+                    menuController.changeActiveitemTo(item.name);
                     if(ResponsiveWidget.isSmallScreen(context))
                       // ignore: curly_braces_in_flow_control_structures
                       Get.back();
-                    navigationController.navigateTo(itemName);
+                    navigationController.navigateTo(item.route);
                   }
                 },
               )).toList(),

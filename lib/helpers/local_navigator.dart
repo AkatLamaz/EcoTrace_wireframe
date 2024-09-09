@@ -7,5 +7,4 @@ Navigator localNavigator() => Navigator(
   key: navigationController.navigationKey,
   initialRoute: OverViewPageRoute,
   onGenerateRoute: generateRoute,
-
 );
