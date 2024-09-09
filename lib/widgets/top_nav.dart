@@ -106,5 +106,5 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
         ],
       ),
       iconTheme: IconThemeData(color: dark), // Corrected iconTheme syntax
-      backgroundColor: Colors.transparent, // Added missing comma
+      backgroundColor: light //Colors.transparent, // Added missing comma
     );
