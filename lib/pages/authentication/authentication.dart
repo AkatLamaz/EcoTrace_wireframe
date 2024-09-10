@@ -89,7 +89,7 @@ class AuthenticationPage extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                Get.offAllNamed(RootRoute);
+                Get.offAllNamed(rootRoute);
               },
               child: Container(
                 decoration: BoxDecoration(

@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         transition: Transition.fadeIn
       ),
       getPages: [
-        GetPage(name: RootRoute, page: () => SiteLayout()),
+        GetPage(name: rootRoute, page: () { return SiteLayout(); }),
         GetPage(name: AuthentitcationPageRoute, page: () => AuthenticationPage()),
       ],
       debugShowCheckedModeBanner: false,
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         textTheme: GoogleFonts.mulishTextTheme(
           Theme.of(context).textTheme
-        ).apply(
+          ).apply(
           bodyColor: Colors.black
         ),
         pageTransitionsTheme: const PageTransitionsTheme(builders: {

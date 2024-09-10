@@ -24,7 +24,7 @@ class HorizontalMenuItem extends StatelessWidget {
       child: Obx(
         () => Container(
           color: menuController.isHovering(itemName!)
-              ? lightGrey.withOpacity(.1)
+              ? lightGrey.withAlpha((0.1 * 255).toInt())
               : Colors.transparent,
           child: Row(
             children: [

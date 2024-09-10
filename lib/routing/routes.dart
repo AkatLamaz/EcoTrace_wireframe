@@ -1,6 +1,4 @@
-// ignore_for_file: constant_identifier_names
-
-const RootRoute = "/";
+const rootRoute = "/";
 
 const OverViewPageDisplayName = "Overview";
 const OverViewPageRoute = "/overview";

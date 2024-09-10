@@ -29,11 +29,11 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
       elevation: 0,
       title: Row(
         children: [
-          const Visibility(
+          Visibility(
             visible: true,
             child: CustomText(
               text: "Dash",
-              color: Colors.lightGreen,
+              color: lightGrey,
               size: 20,
               weight: FontWeight.bold,
             ),
@@ -42,7 +42,7 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
           IconButton(
             icon: Icon(
               Icons.settings,
-              color: dark.withOpacity(.7),
+              color: dark.withAlpha((0.7 * 255).toInt()),
             ),
             onPressed: () {},
           ),
@@ -51,7 +51,7 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
               IconButton(
                 icon: Icon(
                   Icons.notifications,
-                  color: dark.withOpacity(.7),
+                  color: dark.withAlpha((0.7 * 255).toInt()),
                 ),
                 onPressed: () {},
               ),

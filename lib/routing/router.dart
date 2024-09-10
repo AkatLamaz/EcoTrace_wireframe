@@ -5,7 +5,6 @@ import 'package:flutter_web_tutorial2/pages/drivers/drivers.dart';
 import 'package:flutter_web_tutorial2/routing/routes.dart';
 
 Route<dynamic>? generateRoute(RouteSettings settings){
-  // TODO: Implement route generation logic
   switch(settings.name){
       case OverViewPageRoute:
         return _getPageRoute(OverViewPage());
@@ -14,7 +13,7 @@ Route<dynamic>? generateRoute(RouteSettings settings){
       case ClientsViewPageRoute:
        return _getPageRoute(ClientsPage());
       default:
-        return _getPageRoute(DriversPage());
+        return _getPageRoute(OverViewPage());
     }
   }
 

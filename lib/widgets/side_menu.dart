@@ -50,7 +50,7 @@ class SideMenu extends StatelessWidget {
                     ),
                   ],
                 ),
-                    Divider(color: lightGrey.withOpacity(.1), ),
+                    Divider(color: lightGrey.withAlpha((0.1 * 255).toInt()), ),
 
             Column(
               mainAxisSize: MainAxisSize.min,
