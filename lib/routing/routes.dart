@@ -3,11 +3,11 @@ const rootRoute = "/";
 const OverViewPageDisplayName = "Overview";
 const OverViewPageRoute = "/overview";
 
-const DriversViewPageDisplayName = "Drivers";
-const DriversViewPageRoute = "/drivers";
+const ActionViewPageDisplayName = "Action";
+const ActionViewPageRoute = "/Action";
 
-const ClientsViewPageDisplayName = "Clients";
-const ClientsViewPageRoute = "/clients";
+const EmissionsViewPageDisplayName = "Emissions";
+const EmissionsViewPageRoute = "/Emissions";
 
 const AuthentitcationPageDisplayName = "Log Out";
 const AuthentitcationPageRoute = "/auth";
@@ -21,7 +21,7 @@ class MenuItem {
 
 List<MenuItem> sideMenuItems = [
   MenuItem(OverViewPageDisplayName, OverViewPageRoute),
-  MenuItem(DriversViewPageDisplayName, DriversViewPageRoute),
-  MenuItem(ClientsViewPageDisplayName, ClientsViewPageRoute),
+  MenuItem(ActionViewPageDisplayName, ActionViewPageRoute),
+  MenuItem(EmissionsViewPageDisplayName, EmissionsViewPageRoute),
   MenuItem(AuthentitcationPageDisplayName, AuthentitcationPageRoute)
 ];

@@ -24,9 +24,9 @@ class MenuController extends GetxController {
     switch (itemName) {
       case OverViewPageDisplayName:
         return _customIcon(Icons.trending_up, itemName);
-      case DriversViewPageDisplayName:
+      case ActionViewPageDisplayName:
         return _customIcon(Icons.drive_eta, itemName);
-      case ClientsViewPageDisplayName:
+      case EmissionsViewPageDisplayName:
         return _customIcon(Icons.people_alt_outlined, itemName);
       case AuthentitcationPageDisplayName:
         return _customIcon(Icons.exit_to_app, itemName);

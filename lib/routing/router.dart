@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_tutorial2/pages/overview/overview.dart';
-import 'package:flutter_web_tutorial2/pages/clients/clients.dart';
-import 'package:flutter_web_tutorial2/pages/drivers/drivers.dart';
+import 'package:flutter_web_tutorial2/pages/emission/emission.dart';
+import 'package:flutter_web_tutorial2/pages/action/action_page.dart';
 import 'package:flutter_web_tutorial2/routing/routes.dart';
 
 Route<dynamic>? generateRoute(RouteSettings settings){
   switch(settings.name){
       case OverViewPageRoute:
-        return _getPageRoute(OverViewPage());
-      case DriversViewPageRoute:
-        return _getPageRoute(DriversPage());
-      case ClientsViewPageRoute:
-       return _getPageRoute(ClientsPage());
+        return _getPageRoute(const OverViewPage());
+      case ActionViewPageRoute:
+        return _getPageRoute(const ActionsPage());
+      case EmissionsViewPageRoute:
+       return _getPageRoute(const EmissionsPage());
       default:
-        return _getPageRoute(OverViewPage());
+        return _getPageRoute(const OverViewPage());
     }
   }
 
