@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_tutorial2/constants/style.dart';
 import 'package:flutter_web_tutorial2/routing/routes.dart';
@@ -108,9 +109,17 @@ class AuthenticationPage extends StatelessWidget {
               height: 15,
             ),
             RichText(
-                text: TextSpan(children: [
-              const TextSpan(text: "Do not have admin credentials?"),
-              TextSpan(text: "Request credentials!", style: TextStyle(color: active))
+              text: TextSpan(
+                children: [
+                  const TextSpan(text: "Do not have account? "),
+                  TextSpan(
+                    text: "Create account!",
+                    style: TextStyle(color: active),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Get.offAllNamed(RegisterPageRoute);
+                      }
+                )
             ]))
           ],
         ),

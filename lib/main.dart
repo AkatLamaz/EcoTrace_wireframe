@@ -6,7 +6,8 @@ import "package:flutter_web_tutorial2/pages/authentication/authentication.dart";
 import "package:flutter_web_tutorial2/routing/routes.dart";
 import "package:get/get.dart";
 import "package:google_fonts/google_fonts.dart";
-import "controllers/navigation_controller.dart"; 
+import "controllers/navigation_controller.dart";
+import "pages/register/register.dart"; 
 
 void main() {
   Get.put(MenuController());
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
       ),
       getPages: [
         GetPage(name: rootRoute, page: () { return SiteLayout(); }),
+        GetPage(name: RegisterPageRoute, page: () { return RegistrationPage(); }),
         GetPage(name: AuthentitcationPageRoute, page: () => AuthenticationPage()),
       ],
       debugShowCheckedModeBanner: false,

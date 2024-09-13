@@ -1,5 +1,7 @@
 const rootRoute = "/";
 
+const RegisterPageRoute = "/register";
+
 const OverViewPageDisplayName = "Overview";
 const OverViewPageRoute = "/overview";
 

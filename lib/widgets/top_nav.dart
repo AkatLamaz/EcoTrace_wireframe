@@ -80,7 +80,7 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
             width: 24,
           ),
           CustomText(
-            text: "Santos Enoque",
+            text: "Username",
             color: lightGrey,
           ),
           const SizedBox(
