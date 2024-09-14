@@ -13,7 +13,7 @@ final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      extendBodyBehindAppBar: false, // usuwa appbar :D
+      extendBodyBehindAppBar: true, // usuwa appbar :D
       appBar: topNavigationBar(context, scaffoldKey),
       drawer: const Drawer(
         child: SideMenu(),
