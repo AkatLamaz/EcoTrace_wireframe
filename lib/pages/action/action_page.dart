@@ -1,120 +1,151 @@
 import 'package:flutter/material.dart';
+import '../../widgets/action/energy.dart';
+import '../../widgets/action/meal.dart';
+import '../../widgets/action/transport.dart';
 
 class ActionsPage extends StatefulWidget {
   const ActionsPage({super.key});
 
   @override
-  _ActionsPageState createState() => _ActionsPageState();
+  _ActionPageState createState() => _ActionPageState();
 }
 
-class _ActionsPageState extends State<ActionsPage> {
-  final List<String> _actions = ["Jazda autobusem", "Jazda na rowerze", "Spacer"];
-  String? _selectedAction;
-  String? _actionDetails;
-  final List<Map<String, String>> _addedActions = [];
-  String _searchQuery = "";
+class _ActionPageState extends State<ActionsPage> {
+  int _selectedAction = -1; // -1 oznacza brak wybranej akcji
+  final Map<String, dynamic> _formData = {}; // Dane formularza
 
-  void _addAction() {
-    if (_selectedAction != null && _actionDetails != null && _actionDetails!.isNotEmpty) {
-      setState(() {
-        _addedActions.add({
-          "action": _selectedAction!,
-          "details": _actionDetails!,
-        });
-        _actionDetails = "";
-      });
-    }
+  void _resetForm() {
+    setState(() {
+      _formData.clear();
+    });
+  }
+
+  void _submitForm() {
+    // Tutaj możesz zaimplementować logikę zapisu danych
+    print("Formularz zapisany: $_formData");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            _buildActionForm(),
-            const SizedBox(height: 20),
-            _buildSearchBar(),
-            const SizedBox(height: 10),
-            Expanded(child: _buildActionList()),
-          ],
-        ),
+      appBar: AppBar(
+        title: const Text('Akcje'),
       ),
-    );
-  }
-
-  Widget _buildActionForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        DropdownButton<String>(
-          hint: const Text("Wybierz akcję"),
-          value: _selectedAction,
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectedAction = newValue;
-            });
-          },
-          items: _actions.map<DropdownMenuItem<String>>((String action) {
-            return DropdownMenuItem<String>(
-              value: action,
-              child: Text(action),
-            );
-          }).toList(),
-        ),
-        const SizedBox(height: 10),
-        TextField(
-          decoration: const InputDecoration(
-            labelText: "Szczegóły akcji",
-            hintText: "Np. 10 km jazdy autobusem",
+      body: Column(
+        children: [
+          // Sekcja z przyciskami wyboru akcji
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Adjust layout
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedAction = 0; // Transport
+                    _resetForm();
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _selectedAction == 0 ? Theme.of(context).primaryColor : Colors.grey,
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  'Transport',
+                  style: TextStyle(
+                    fontFamily: 'Inter Tight',
+                    color: Colors.white,
+                    letterSpacing: 0.0,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedAction = 1; // Żywienie
+                    _resetForm();
+                    _showFoodSelectionDialog(context); // Show food selection dialog
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _selectedAction == 1 ? Theme.of(context).primaryColor : Colors.grey,
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  'Żywienie',
+                  style: TextStyle(
+                    fontFamily: 'Inter Tight',
+                    color: Colors.white,
+                    letterSpacing: 0.0,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedAction = 2; // Energia
+                    _resetForm();
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _selectedAction == 2 ? Theme.of(context).primaryColor : Colors.grey,
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  'Energia',
+                  style: TextStyle(
+                    fontFamily: 'Inter Tight',
+                    color: Colors.white,
+                    letterSpacing: 0.0,
+                  ),
+                ),
+              ),
+            ],
           ),
-          onChanged: (value) {
-            _actionDetails = value;
-          },
-        ),
-        const SizedBox(height: 10),
-        ElevatedButton(
-          onPressed: _addAction,
-          child: const Text("Dodaj akcję"),
-        ),
-      ],
-    );
-  }
+          const SizedBox(height: 20),
+          
+          // Sekcja z formularzem odpowiednim do wybranej akcji
+          if (_selectedAction == 0) Expanded(child: TransportForm()),
+          if (_selectedAction == 1) Expanded(child: MealForm(formData: _formData)),
+          if (_selectedAction == 2) Expanded(child: EnergyForm(formData: _formData)),
 
-  Widget _buildSearchBar() {
-    return TextField(
-      decoration: const InputDecoration(
-        labelText: "Wyszukaj akcję",
-        hintText: "Wpisz nazwę akcji...",
-        prefixIcon: Icon(Icons.search),
-      ),
-      onChanged: (value) {
-        setState(() {
-          _searchQuery = value.toLowerCase();
-        });
-      },
-    );
-  }
-
-  Widget _buildActionList() {
-    List<Map<String, String>> filteredActions = _addedActions.where((action) {
-      return action["action"]!.toLowerCase().contains(_searchQuery);
-    }).toList();
-
-    return ListView.builder(
-      itemCount: filteredActions.length,
-      itemBuilder: (context, index) {
-        return ExpansionTile(
-          title: Text(filteredActions[index]["action"]!),
-          children: [
+          // Sekcja z przyciskami akcji
+          if (_selectedAction != -1)
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(filteredActions[index]["details"]!),
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      _submitForm(); // Zatwierdzenie formularza
+                    },
+                    child: const Text('Zatwierdź'),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      _resetForm(); // Resetowanie formularza
+                    },
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    child: Text('Anuluj'),
+                  ),
+                ],
+              ),
             ),
-          ],
-        );
-      },
+        ],
+      ),
     );
+  }
+
+  void _showFoodSelectionDialog(BuildContext context) {
+    // Placeholder for the food selection dialog
   }
 }

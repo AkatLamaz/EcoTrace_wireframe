@@ -13,7 +13,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
   int selectedYear = 2021; // Początkowy wybrany rok
   String selectedMonth = "Jun"; // Początkowy wybrany miesiąc
 
-  final List<int> availableYears = [2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028];
+  final List<int> availableYears = [2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028,2029,2030,2031,2032,2033,2034,2035,2036,2037,2038,2039,2040];
   final List<String> months = [
     "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
   ];
@@ -41,7 +41,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(
-          maxWidth: 1200, // Ograniczenie szerokości
+          maxWidth: double.infinity, // Ograniczenie szerokości
         ),
         child: SizedBox(
           width: double.infinity,
@@ -125,7 +125,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                   // Możesz dodać kolejne elementy UI
                   Container(
                     width: double.infinity, // Ograniczenie szerokości
-                    height: 300, // Ograniczenie wysokości
+                    height: 600, // Ograniczenie wysokości
                     color: Colors.grey[200], // Dodaj kolor tła, aby widzieć element
                     child: const Center(
                       child: Text(

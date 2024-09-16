@@ -18,7 +18,7 @@ class YearSelector extends StatelessWidget {
       title: const Text('Select Year'),
       content: ConstrainedBox(
         constraints: const BoxConstraints(
-          maxWidth: 300, // Ustaw maksymalną szerokość okna dialogowego
+          maxWidth: 450, // Ustaw maksymalną szerokość okna dialogowego
         ),
         child: SizedBox(
           width: double.maxFinite, // Ustal szerokość na maksymalną

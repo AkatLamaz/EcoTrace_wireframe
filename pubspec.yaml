@@ -34,6 +34,7 @@ dependencies:
   charts_flutter_new: ^0.12.0
   get: ^4.6.6
   data_table_2: ^2.5.15
+  csv: ^6.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -69,6 +70,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - lib/data/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
