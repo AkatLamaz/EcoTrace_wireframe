@@ -46,12 +46,12 @@ class _ActionPageState extends State<ActionsPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _selectedAction == 0 ? Theme.of(context).primaryColor : Colors.grey,
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Transport',
                   style: TextStyle(
                     fontFamily: 'Inter Tight',
@@ -70,12 +70,12 @@ class _ActionPageState extends State<ActionsPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _selectedAction == 1 ? Theme.of(context).primaryColor : Colors.grey,
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Żywienie',
                   style: TextStyle(
                     fontFamily: 'Inter Tight',
@@ -93,12 +93,12 @@ class _ActionPageState extends State<ActionsPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _selectedAction == 2 ? Theme.of(context).primaryColor : Colors.grey,
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Energia',
                   style: TextStyle(
                     fontFamily: 'Inter Tight',
@@ -135,7 +135,7 @@ class _ActionPageState extends State<ActionsPage> {
                       _resetForm(); // Resetowanie formularza
                     },
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                    child: Text('Anuluj'),
+                    child: const Text('Anuluj'),
                   ),
                 ],
               ),

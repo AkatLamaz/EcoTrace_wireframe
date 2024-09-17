@@ -1,10 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:csv/csv.dart';
-import 'dart:async';
-import 'dart:io';
-import '../../../converter.dart';
-import '/data/2010.csv';
+import '/data/vehicle_service.dart'; // Import the new vehicle service
+import 'package:dropdown_search/dropdown_search.dart'; // Import the dropdown_search package
 
 class TransportForm extends StatefulWidget {
   @override
@@ -13,6 +9,12 @@ class TransportForm extends StatefulWidget {
 
 class _TransportFormState extends State<TransportForm> {
   List<Map<String, String>> _data = [];
+  List<String> _modelNames = [];
+  List<String> _divisions = [];
+  List<String> _modelYears = [];
+  List<String> _fuelTypes = [];
+  List<String> _filteredModelNames = [];
+  List<String> _filteredFuelTypes = [];
   String _selectedModelName = '';
   String _selectedDivision = '';
   String _selectedModelYear = '';
@@ -21,24 +23,63 @@ class _TransportFormState extends State<TransportForm> {
   @override
   void initState() {
     super.initState();
-    _loadCSV();
+    _loadData();
   }
 
-  Future<void> _loadCSV() async {
-    String csvData = await DefaultAssetBundle.of(context).loadString('/data/2010.csv');
-    List<List<dynamic>> csvTable = const CsvToListConverter().convert(csvData);
+  Future<void> _loadData() async {
+    VehicleService vehicleService = VehicleService();
+    List<Map<String, dynamic>> vehicles = await vehicleService.getVehicles();
     setState(() {
-      _data = csvTable.skip(1).map((row) {
-        return Map.fromIterables(csvTable[0].cast<String>(), row.map((cell) => cell.toString()));
+      _data = vehicles.map((vehicle) {
+        return vehicle.map((key, value) => MapEntry(key, value.toString()));
       }).toList();
+
+      _divisions = _extractUniqueValues('division');
+      _modelYears = _extractUniqueValues('model_year');
+      _fuelTypes = _extractUniqueValues('fuel_type');
+
+      _filterData(); // Filter data based on initial state
     });
+  }
+
+  List<String> _extractUniqueValues(String key) {
+    final values = _data.map((item) => item[key]!).toSet().toList();
+    values.sort(); // Optional: Sort values alphabetically
+    return values;
+  }
+
+  void _filterData() {
+    // Filter model names based on selected division
+    _filteredModelNames = _data
+        .where((item) => item['division'] == _selectedDivision)
+        .map((item) => item['carline']!)
+        .toSet()
+        .toList();
+
+    // Filter fuel types based on selected model name
+    _filteredFuelTypes = _data
+        .where((item) => item['carline'] == _selectedModelName)
+        .map((item) => item['fuel_type']!)
+        .toSet()
+        .toList();
+
+    _filteredModelNames.sort(); // Optional: Sort values alphabetically
+    _filteredFuelTypes.sort(); // Optional: Sort values alphabetically
+
+    // Reset selected values if they are not in the filtered lists
+    if (!_filteredModelNames.contains(_selectedModelName)) {
+      _selectedModelName = '';
+    }
+    if (!_filteredFuelTypes.contains(_selectedFuelType)) {
+      _selectedFuelType = '';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Transport'),
+        title: const Text('Transport'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -49,16 +90,18 @@ class _TransportFormState extends State<TransportForm> {
             ),
             child: Column(
               children: [
-                _buildDropdownField('Model name', _selectedModelName, (value) {
-                  setState(() {
-                    _selectedModelName = value;
-                  });
-                }, 'Carline'),
-                _buildDropdownField('Division', _selectedDivision, (value) {
+                _buildDropdownSearchField('Division', _selectedDivision, (value) {
                   setState(() {
                     _selectedDivision = value;
+                    _filterData(); // Update filters based on new selection
                   });
-                }, 'Division'),
+                }, _divisions),
+                _buildDropdownSearchField('Model name', _selectedModelName, (value) {
+                  setState(() {
+                    _selectedModelName = value;
+                    _filterData(); // Update filters based on new selection
+                  });
+                }, _filteredModelNames),
                 Row(
                   children: [
                     Expanded(
@@ -66,15 +109,15 @@ class _TransportFormState extends State<TransportForm> {
                         setState(() {
                           _selectedModelYear = value;
                         });
-                      }, 'Model Yr'),
+                      }, _modelYears),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: _buildDropdownField('Fuel type', _selectedFuelType, (value) {
                         setState(() {
                           _selectedFuelType = value;
                         });
-                      }, 'Fuel Usage Desc - Conventional Fuel'),
+                      }, _filteredFuelTypes),
                     ),
                   ],
                 ),
@@ -86,18 +129,55 @@ class _TransportFormState extends State<TransportForm> {
     );
   }
 
-  Widget _buildDropdownField(String label, String selectedValue, ValueChanged<String> onChanged, String csvKey) {
+  Widget _buildDropdownSearchField(String label, String selectedValue, ValueChanged<String> onChanged, List<String> items) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
+        DropdownSearch<String>(
+          items: items,
+          selectedItem: selectedValue.isEmpty ? null : selectedValue,
+          onChanged: (String? value) {
+            if (value != null) {
+              onChanged(value);
+            }
+          },
+          dropdownDecoratorProps: DropDownDecoratorProps(
+            dropdownSearchDecoration: InputDecoration(
+              labelText: label,
+              border: const OutlineInputBorder(),
+              filled: true,
+              fillColor: Colors.grey[200],
+            ),
+          ),
+          popupProps: PopupProps.menu(
+            showSearchBox: true,
+            constraints: const BoxConstraints(maxHeight: 300), // Limit to 4 items
+            searchFieldProps: TextFieldProps(
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: 'Search $label',
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDropdownField(String label, String selectedValue, ValueChanged<String> onChanged, List<String> items) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label),
+        const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           value: selectedValue.isEmpty ? null : selectedValue,
-          items: _data.map((item) {
+          items: items.map((item) {
             return DropdownMenuItem<String>(
-              value: item[csvKey],
-              child: Text(item[csvKey]!),
+              value: item,
+              child: Text(item),
             );
           }).toList(),
           onChanged: (String? value) {
@@ -106,7 +186,7 @@ class _TransportFormState extends State<TransportForm> {
             }
           },
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
             filled: true,
             fillColor: Colors.grey[200],
           ),
