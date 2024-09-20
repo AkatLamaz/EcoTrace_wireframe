@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '/data/vehicle_service.dart'; // Import the new vehicle service
-import 'package:dropdown_search/dropdown_search.dart'; // Import the dropdown_search package
+import '/data/vehicle_service.dart'; 
+import 'package:dropdown_search/dropdown_search.dart'; 
 
 class TransportForm extends StatefulWidget {
   @override
@@ -38,35 +38,32 @@ class _TransportFormState extends State<TransportForm> {
       _modelYears = _extractUniqueValues('model_year');
       _fuelTypes = _extractUniqueValues('fuel_type');
 
-      _filterData(); // Filter data based on initial state
+      _filterData(); 
     });
   }
 
   List<String> _extractUniqueValues(String key) {
     final values = _data.map((item) => item[key]!).toSet().toList();
-    values.sort(); // Optional: Sort values alphabetically
+    values.sort(); 
     return values;
   }
 
   void _filterData() {
-    // Filter model names based on selected division
     _filteredModelNames = _data
         .where((item) => item['division'] == _selectedDivision)
         .map((item) => item['carline']!)
         .toSet()
         .toList();
 
-    // Filter fuel types based on selected model name
     _filteredFuelTypes = _data
         .where((item) => item['carline'] == _selectedModelName)
         .map((item) => item['fuel_type']!)
         .toSet()
         .toList();
 
-    _filteredModelNames.sort(); // Optional: Sort values alphabetically
-    _filteredFuelTypes.sort(); // Optional: Sort values alphabetically
+    _filteredModelNames.sort(); 
+    _filteredFuelTypes.sort(); 
 
-    // Reset selected values if they are not in the filtered lists
     if (!_filteredModelNames.contains(_selectedModelName)) {
       _selectedModelName = '';
     }
@@ -93,13 +90,13 @@ class _TransportFormState extends State<TransportForm> {
                 _buildDropdownSearchField('Division', _selectedDivision, (value) {
                   setState(() {
                     _selectedDivision = value;
-                    _filterData(); // Update filters based on new selection
+                    _filterData(); 
                   });
                 }, _divisions),
                 _buildDropdownSearchField('Model name', _selectedModelName, (value) {
                   setState(() {
                     _selectedModelName = value;
-                    _filterData(); // Update filters based on new selection
+                    _filterData(); 
                   });
                 }, _filteredModelNames),
                 Row(
@@ -153,7 +150,7 @@ class _TransportFormState extends State<TransportForm> {
           ),
           popupProps: PopupProps.menu(
             showSearchBox: true,
-            constraints: const BoxConstraints(maxHeight: 300), // Limit to 4 items
+            constraints: const BoxConstraints(maxHeight: 300), 
             searchFieldProps: TextFieldProps(
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),

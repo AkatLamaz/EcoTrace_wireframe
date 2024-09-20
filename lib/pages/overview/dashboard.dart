@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_tutorial2/widgets/year_selector.dart';
-
+import '../../data/scope_data.dart';
+import '../../widgets/scope.dart';
+import '../../widgets/latest_impact_items.dart'; // Import the new widget
+import '../../data/latest_impact_items_data.dart'; // Import the data
 
 class DashboardWidget extends StatefulWidget {
   const DashboardWidget({super.key});
@@ -35,7 +38,6 @@ class _DashboardWidgetState extends State<DashboardWidget> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -45,7 +47,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
         ),
         child: SizedBox(
           width: double.infinity,
-          height: 600,
+          height: 800,
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -122,18 +124,24 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // Możesz dodać kolejne elementy UI
-                  Container(
-                    width: double.infinity, // Ograniczenie szerokości
-                    height: 600, // Ograniczenie wysokości
-                    color: Colors.grey[200], // Dodaj kolor tła, aby widzieć element
-                    child: const Center(
-                      child: Text(
-                        "Tutaj możesz wstawić dodatkowe dane",
-                        style: TextStyle(fontSize: 16),
-                      ),
+                  Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,  // Ensures the column takes up minimal space
+                      children: [
+                        SizedBox(
+                          child: ScopeWidget(data: getSampleData()),
+                        ),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          child: LatestImpactItems(items: getImpactItems()),
+                        ),
+                      ],
                     ),
-                  ),
+                  )
+                  // const SizedBox(height: 20),
+                  // // Dodanie widgetu LatestImpactItems
+                  // LatestImpactItems(items: getImpactItems()),
+                  // const SizedBox(height: 20),
                 ],
               ),
             ),
