@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_web_tutorial2/widgets/scope_pie_chart.dart';
 import 'package:flutter_web_tutorial2/widgets/year_selector.dart';
 import '../../data/scope_data.dart';
 import '../../widgets/scope.dart';
 import '../../widgets/latest_impact_items.dart'; // Import the new widget
 import '../../data/latest_impact_items_data.dart'; // Import the data
+import '../../helpers/responsiveness.dart'; // Import the responsiveness helper
 
 class DashboardWidget extends StatefulWidget {
   const DashboardWidget({super.key});
@@ -132,16 +134,37 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                           child: ScopeWidget(data: getSampleData()),
                         ),
                         const SizedBox(height: 20),
-                        SizedBox(
-                          child: LatestImpactItems(items: getImpactItems()),
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            if (ResponsiveWidget.isSmallScreen(context) || ResponsiveWidget.isCustomScreen(context)) {
+                              return Column(
+                                children: [
+                                  const ScopePieChart(),
+                                  const SizedBox(height: 20),
+                                  LatestImpactItems(items: getImpactItems()),
+                                ],
+                              );
+                            } else {
+                              return Row(
+                                children: [
+                                  const Flexible(
+                                    flex: 2, // 40% szerokości
+                                    child: ScopePieChart(),
+                                  ),
+                                  const SizedBox(width: 20), // Odstęp między widgetami
+                                  Flexible(
+                                    flex: 4, // 60% szerokości
+                                    child: LatestImpactItems(items: getImpactItems()),
+                                  ),
+                                ],
+                              );
+                            }
+                          },
                         ),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   )
-                  // const SizedBox(height: 20),
-                  // // Dodanie widgetu LatestImpactItems
-                  // LatestImpactItems(items: getImpactItems()),
-                  // const SizedBox(height: 20),
                 ],
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/latest_impact_items_data.dart';
+import '../helpers/responsiveness.dart'; // Importujemy plik z wartościami
 
 class LatestImpactItems extends StatelessWidget {
   final List<ImpactItem> items;
@@ -8,39 +9,50 @@ class LatestImpactItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Highest impact items',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double width = constraints.maxWidth >= customScreenSize ? constraints.maxWidth * 0.6 : constraints.maxWidth;
+
+        return Center(
+          child: SizedBox(
+            width: width,
+            child: Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
-            ),
-            const SizedBox(height: 8),
-            ...items.map((item) => _buildImpactItemRow(item)).toList(),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Text(
-                'Jun 2021',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 14,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Highest impact items',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...items.map((item) => _buildImpactItemRow(item)).toList(),
+                    const SizedBox(height: 8),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        'Jun 2021',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
