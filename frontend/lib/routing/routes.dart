@@ -1,4 +1,4 @@
-const rootRoute = "/";
+const rootRoute = "/site-layout";
 
 const RegisterPageRoute = "/register";
 
@@ -6,13 +6,16 @@ const OverViewPageDisplayName = "Overview";
 const OverViewPageRoute = "/overview";
 
 const ActionViewPageDisplayName = "Action";
-const ActionViewPageRoute = "/Action";
+const ActionViewPageRoute = "/action";
 
 const EmissionsViewPageDisplayName = "Emissions";
-const EmissionsViewPageRoute = "/Emissions";
+const EmissionsViewPageRoute = "/emissions";
 
 const AuthentitcationPageDisplayName = "Log Out";
 const AuthentitcationPageRoute = "/auth";
+
+const PageNotFoundDisplayName = "Page Not Found";
+const PageNotFoundRoute = "/not-found";
 
 class MenuItem {
   final String name;

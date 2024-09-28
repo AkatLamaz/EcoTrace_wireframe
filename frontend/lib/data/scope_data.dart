@@ -9,6 +9,6 @@ List<ScopeData> getSampleData() {
   return [
     ScopeData('Scope 1', 298.04),
     ScopeData('Scope 2', 184.46),
-    ScopeData('Scope 3', 6.41),
+    ScopeData('Scope 3', 60.41),
   ];
 }

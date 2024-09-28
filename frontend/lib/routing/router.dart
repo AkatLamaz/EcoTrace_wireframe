@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web_tutorial2/pages/overview/overview.dart';
 import 'package:flutter_web_tutorial2/pages/emission/emission.dart';
 import 'package:flutter_web_tutorial2/pages/action/action_page.dart';
+import 'package:flutter_web_tutorial2/pages/404/error_page.dart';
 import 'package:flutter_web_tutorial2/routing/routes.dart';
 
 Route<dynamic>? generateRoute(RouteSettings settings){
@@ -13,7 +14,7 @@ Route<dynamic>? generateRoute(RouteSettings settings){
       case EmissionsViewPageRoute:
        return _getPageRoute(const EmissionsPage());
       default:
-        return _getPageRoute(const OverViewPage());
+        return _getPageRoute(const PageNotFound());
     }
   }
 

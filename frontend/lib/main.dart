@@ -21,15 +21,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      initialRoute: AuthentitcationPageRoute,
       unknownRoute: GetPage(
         name: "/not-found", 
         page: () => const PageNotFound(),
         transition: Transition.fadeIn
       ),
+      initialRoute: AuthentitcationPageRoute,
       getPages: [
-        GetPage(name: rootRoute, page: () { return SiteLayout(); }),
-        GetPage(name: RegisterPageRoute, page: () { return RegistrationPage(); }),
+        GetPage(name: rootRoute, page: () => SiteLayout()),
+        GetPage(name: RegisterPageRoute, page: () => RegistrationPage()),
         GetPage(name: AuthentitcationPageRoute, page: () => AuthenticationPage()),
       ],
       debugShowCheckedModeBanner: false,

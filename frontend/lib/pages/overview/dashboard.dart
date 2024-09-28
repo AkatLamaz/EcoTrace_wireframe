@@ -148,12 +148,12 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                               return Row(
                                 children: [
                                   const Flexible(
-                                    flex: 2, // 40% szerokości
+                                    flex: 2, 
                                     child: ScopePieChart(),
                                   ),
                                   const SizedBox(width: 20), // Odstęp między widgetami
                                   Flexible(
-                                    flex: 4, // 60% szerokości
+                                    flex: 4, 
                                     child: LatestImpactItems(items: getImpactItems()),
                                   ),
                                 ],

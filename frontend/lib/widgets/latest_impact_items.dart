@@ -11,7 +11,7 @@ class LatestImpactItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double width = constraints.maxWidth >= customScreenSize ? constraints.maxWidth * 0.6 : constraints.maxWidth;
+        double width = constraints.maxWidth >= customScreenSize ? constraints.maxWidth * 1 : constraints.maxWidth;
 
         return Center(
           child: SizedBox(
@@ -27,7 +27,7 @@ class LatestImpactItems extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Highest impact items',
+                      'Latest impact items',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
