@@ -7,7 +7,8 @@ import "package:flutter_web_tutorial2/routing/routes.dart";
 import "package:get/get.dart";
 import "package:google_fonts/google_fonts.dart";
 import "controllers/navigation_controller.dart";
-import "pages/register/register.dart"; 
+import "pages/register/register.dart";
+import "pages/settings/settings.dart"; // Import SettingsPage
 
 void main() {
   Get.put(MenuController());
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: rootRoute, page: () => SiteLayout()),
         GetPage(name: RegisterPageRoute, page: () => RegistrationPage()),
         GetPage(name: AuthentitcationPageRoute, page: () => AuthenticationPage()),
+        GetPage(name: SettingsPageRoute, page: () => const SettingsPage()), // Add SettingsPageRoute
       ],
       debugShowCheckedModeBanner: false,
       title: "Dash",

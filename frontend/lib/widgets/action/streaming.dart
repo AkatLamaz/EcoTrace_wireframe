@@ -1,43 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class EnergyForm extends StatefulWidget {
+class StreamingForm extends StatefulWidget {
   final Map<String, dynamic> formData;
 
-  EnergyForm({required this.formData});
+  const StreamingForm({super.key, required this.formData});
 
   @override
-  _EnergyFormState createState() => _EnergyFormState();
+  _StreamingFormState createState() => _StreamingFormState();
 }
 
-class _EnergyFormState extends State<EnergyForm> {
-  final TextEditingController _consumptionController = TextEditingController();
+class _StreamingFormState extends State<StreamingForm> {
+  final TextEditingController _hoursController = TextEditingController();
 
   double _co2Emission = 0.0;
 
   final Map<String, double> _emissionFactors = {
-    'Electricity': 0.8, // kg CO₂/kWh for Poland
-    'Natural Gas': 2.0, // kg CO₂/m³
-    'Heating Oil': 2.68, // kg CO₂/liter
-    'Wood': 0.0, // kg CO₂ (assumed low or zero)
-    'Solar Energy': 0.0, // kg CO₂ (assumed low or zero)
-    'Wind Energy': 0.0, // kg CO₂ (assumed low or zero)
+    'Netflix': 0.2, // kg CO₂ per hour
+    'YouTube': 0.1, // kg CO₂ per hour
+    'Amazon Prime': 0.15, // kg CO₂ per hour
+    'Disney+': 0.12, // kg CO₂ per hour
   };
 
-  final Map<String, String> _units = {
-    'Electricity': 'kWh',
-    'Natural Gas': 'm³',
-    'Heating Oil': 'liters',
-    'Wood': 'kg',
-    'Solar Energy': 'kWh',
-    'Wind Energy': 'kWh',
-  };
-
-  String _selectedEnergyType = 'Electricity';
+  String _selectedStreamingService = 'Netflix';
 
   void _calculateEmissions() {
     setState(() {
-      _co2Emission = (double.tryParse(_consumptionController.text) ?? 0.0) * _emissionFactors[_selectedEnergyType]!;
+      _co2Emission = (double.tryParse(_hoursController.text) ?? 0.0) * _emissionFactors[_selectedStreamingService]!;
     });
   }
 
@@ -45,26 +34,26 @@ class _EnergyFormState extends State<EnergyForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Energy Consumption'),
+        title: const Text('Streaming Consumption'),
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              _buildDropdownSearchField('Energy Type', _selectedEnergyType, (value) {
+              _buildDropdownSearchField('Streaming Service', _selectedStreamingService, (value) {
                 setState(() {
-                  _selectedEnergyType = value;
+                  _selectedStreamingService = value;
                 });
               }, _emissionFactors.keys.toList()),
-              _buildTextField('Consumption (${_units[_selectedEnergyType]})', _consumptionController),
+              _buildTextField('Hours Watched', _hoursController),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _calculateEmissions,
                 child: const Text('Calculate Emissions'),
               ),
               const SizedBox(height: 16),
-              _buildEmissionResult('$_selectedEnergyType CO₂ Emission', _co2Emission),
+              _buildEmissionResult('$_selectedStreamingService CO₂ Emission', _co2Emission),
             ],
           ),
         ),

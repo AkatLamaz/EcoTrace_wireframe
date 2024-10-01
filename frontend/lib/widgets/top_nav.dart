@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_web_tutorial2/constants/controllers.dart';
 import 'package:flutter_web_tutorial2/helpers/responsiveness.dart';
-import 'package:flutter_web_tutorial2/widgets/custom_text.dart';
+import 'package:flutter_web_tutorial2/widgets/custom_text.dart';// Dodaj import GetX
 import '../constants/style.dart';
+import '../routing/routes.dart'; // Import routes
 
 AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) => 
     AppBar(
@@ -44,7 +46,9 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
               Icons.settings,
               color: dark.withAlpha((0.7 * 255).toInt()),
             ),
-            onPressed: () {},
+            onPressed: () {
+              navigationController.navigateTo(SettingsPageRoute); // Zmieniono na navigationController.navigateTo
+            },
           ),
           Stack(
             children: [

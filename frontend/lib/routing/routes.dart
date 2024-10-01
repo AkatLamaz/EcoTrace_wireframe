@@ -17,6 +17,9 @@ const AuthentitcationPageRoute = "/auth";
 const PageNotFoundDisplayName = "Page Not Found";
 const PageNotFoundRoute = "/not-found";
 
+const SettingsPageDisplayName = "Settings";
+const SettingsPageRoute = "/settings";
+
 class MenuItem {
   final String name;
   final String route;
@@ -28,5 +31,6 @@ List<MenuItem> sideMenuItems = [
   MenuItem(OverViewPageDisplayName, OverViewPageRoute),
   MenuItem(ActionViewPageDisplayName, ActionViewPageRoute),
   MenuItem(EmissionsViewPageDisplayName, EmissionsViewPageRoute),
-  MenuItem(AuthentitcationPageDisplayName, AuthentitcationPageRoute)
+  MenuItem(AuthentitcationPageDisplayName, AuthentitcationPageRoute),
+  //MenuItem(SettingsPageDisplayName, SettingsPageRoute),
 ];

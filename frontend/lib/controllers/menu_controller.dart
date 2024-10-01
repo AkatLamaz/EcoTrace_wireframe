@@ -30,6 +30,8 @@ class MenuController extends GetxController {
         return _customIcon(Icons.people_alt_outlined, itemName);
       case AuthentitcationPageDisplayName:
         return _customIcon(Icons.exit_to_app, itemName);
+      case SettingsPageDisplayName: // Dodano stronę ustawień
+        return _customIcon(Icons.settings, itemName);
       default:
         return _customIcon(Icons.exit_to_app, itemName);
     }

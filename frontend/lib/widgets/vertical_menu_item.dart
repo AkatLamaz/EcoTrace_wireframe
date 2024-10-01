@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_tutorial2/constants/controllers.dart';
 import 'package:get/get.dart';
-
 import '../constants/style.dart';
 import 'custom_text.dart';
 
