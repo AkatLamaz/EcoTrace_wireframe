@@ -1,30 +1,54 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart'; // Dodaj import GetX
 
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+class SettingsController extends GetxController {
+  final name = 'Jan Kowalski'.obs;
+  final birthDate = DateTime.now().obs;
+  final gender = 'Mężczyzna'.obs;
+  final email = 'mail@mail.com'.obs;
+  final phone = '111111111'.obs;
+  final Rx<XFile?> profileImage = Rx<XFile?>(null);
 
-  @override
-  _SettingsPageState createState() => _SettingsPageState();
+  void updateName(String value) {
+    if (value.length <= 50) {
+      name.value = value;
+    } else {
+      Get.snackbar('Błąd', 'Imię i nazwisko nie może przekraczać 50 znaków');
+    }
+  }
+
+  void updateBirthDate(DateTime value) => birthDate.value = value;
+  void updateGender(String value) => gender.value = value;
+  void updateEmail(String value) {
+    if (_isValidEmail(value)) {
+      email.value = value;
+    } else {
+      Get.snackbar('Błąd', 'Nieprawidłowy adres e-mail');
+    }
+  }
+  void updatePhone(String value) {
+    if (value.length <= 11 && value.contains(RegExp(r'^[0-9]+$'))) {
+      phone.value = value;
+    } else {
+      Get.snackbar('Błąd', 'Numer telefonu musi składać się z maksymalnie 11 cyfr');
+    }
+  }
+  void updateProfileImage(XFile? value) => profileImage.value = value;
+
+  bool _isValidEmail(String email) {
+    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+  }
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class SettingsPage extends StatelessWidget {
+  SettingsPage({Key? key}) : super(key: key);
+
   final ImagePicker _picker = ImagePicker();
-  XFile? _profileImage;
-
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _profileImage = pickedFile;
-    });
-  }
-
-  void _navigateTo(String route) {
-    Get.toNamed(route);
-  }
+  final SettingsController controller = Get.put(SettingsController());
 
   @override
   Widget build(BuildContext context) {
@@ -38,19 +62,17 @@ class _SettingsPageState extends State<SettingsPage> {
           child: Column(
             children: [
               _buildSectionTitle('Podstawowe informacje'),
-              _buildProfileImage(),
-              _buildListTile('Imię i nazwisko', 'Jan Kowalski', '/profile'),
-              _buildListTile('Data urodzenia', '12.12.2012', '/birthdate'),
-              _buildListTile('Płeć', 'Mężczyzna', '/gender'),
+              _buildProfileImage(context),
+              Obx(() => _buildEditableListTile('Imię i nazwisko', controller.name.value, _editName)),
+              Obx(() => _buildEditableListTile('Data urodzenia', controller.birthDate.value.toString().split(' ')[0], _editBirthDate)),
+              Obx(() => _buildEditableListTile('Płeć', controller.gender.value, _editGender)),
               const SizedBox(height: 16),
               _buildSectionTitle('Informacje kontaktowe'),
-              _buildListTile('E-mail', 'mail@mail.com', '/email'),
-              _buildListTile('Telefon', '111 111 111', '/phone'),
+              Obx(() => _buildEditableListTile('E-mail', controller.email.value, _editEmail)),
+              Obx(() => _buildEditableListTile('Telefon', controller.phone.value, _editPhone)),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  _navigateTo('/manage-google-emails');
-                },
+                onPressed: _saveChanges,
                 child: const Text('Zapisz zmiany'),
               ),
             ],
@@ -70,36 +92,219 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildProfileImage() {
+  Widget _buildProfileImage(BuildContext context) {
     return GestureDetector(
-      onTap: _pickImage,
-      child: CircleAvatar(
+      onTap: () => _pickImage(context),
+      child: Obx(() => CircleAvatar(
         radius: 40,
-        backgroundImage: _profileImage != null
-            ? FileImage(File(_profileImage!.path))
+        backgroundImage: controller.profileImage.value != null
+            ? FileImage(File(controller.profileImage.value!.path))
             : null,
-        child: _profileImage == null
+        child: controller.profileImage.value == null
             ? const Icon(Icons.person_outline, size: 40, color: Colors.grey)
-            : const Align(
-                alignment: Alignment.bottomRight,
-                child: CircleAvatar(
-                  radius: 12,
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.camera_alt, size: 15, color: Colors.black),
-                ),
-              ),
+            : null,
+      )),
+    );
+  }
+
+  Widget _buildEditableListTile(String title, String value, Function() onEdit) {
+    return ListTile(
+      title: Text(title),
+      subtitle: Text(value),
+      trailing: IconButton(
+        icon: const Icon(Icons.edit),
+        onPressed: onEdit,
       ),
     );
   }
 
-  Widget _buildListTile(String title, String subtitle, String route) {
-    return ListTile(
-      title: Text(title),
-      subtitle: Text(subtitle),
-      trailing: const Icon(Icons.arrow_forward_ios),
-      onTap: () {
-        _navigateTo(route);
-      },
+  void _pickImage(BuildContext context) async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      controller.updateProfileImage(pickedFile);
+    }
+  }
+
+  void _editName() {
+    final TextEditingController nameController = TextEditingController(text: controller.name.value);
+    String? errorText;
+    Get.defaultDialog(
+      title: 'Edytuj imię i nazwisko',
+      content: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Column(
+            children: [
+              TextField(
+                controller: nameController,
+                onChanged: (value) {
+                  setState(() {
+                    errorText = value.length > 50 ? 'Imię i nazwisko nie może przekraczać 50 znaków' : null;
+                  });
+                },
+                maxLength: 50,
+                decoration: InputDecoration(
+                  counterText: '${nameController.text.length}/50',
+                  errorText: errorText,
+                ),
+              ),
+              if (errorText != null) Text(errorText!, style: TextStyle(color: Colors.red)),
+            ],
+          );
+        },
+      ),
+      confirm: TextButton(
+        onPressed: () {
+          if (errorText == null) {
+            controller.updateName(nameController.text);
+            Get.back();
+          }
+        },
+        child: const Text('OK'),
+      ),
     );
+  }
+
+  void _editBirthDate() {
+    Get.defaultDialog(
+      title: 'Edytuj datę urodzenia',
+      content: Obx(() => Text(controller.birthDate.value.toString().split(' ')[0])),
+      confirm: TextButton(
+        onPressed: () async {
+          final date = await showDatePicker(
+            context: Get.context!,
+            initialDate: controller.birthDate.value,
+            firstDate: DateTime(1900),
+            lastDate: DateTime.now(),
+          );
+          if (date != null) {
+            controller.updateBirthDate(date);
+          }
+          Get.back();
+        },
+        child: const Text('Wybierz datę'),
+      ),
+    );
+  }
+
+  void _editGender() {
+    Get.defaultDialog(
+      title: 'Wybierz płeć',
+      content: Column(
+        children: ['Mężczyzna', 'Kobieta', 'Inna'].map((gender) => 
+          RadioListTile<String>(
+            title: Text(gender),
+            value: gender,
+            groupValue: controller.gender.value,
+            onChanged: (value) {
+              controller.updateGender(value!);
+              Get.back();
+            },
+          ),
+        ).toList(),
+      ),
+    );
+  }
+
+  void _editEmail() {
+    final TextEditingController emailController = TextEditingController(text: controller.email.value);
+    String? errorText;
+    Get.defaultDialog(
+      title: 'Edytuj e-mail',
+      content: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Column(
+            children: [
+              TextField(
+                controller: emailController,
+                onChanged: (value) {
+                  setState(() {
+                    errorText = controller._isValidEmail(value) ? null : 'Nieprawidłowy adres e-mail';
+                  });
+                },
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  errorText: errorText,
+                ),
+              ),
+              if (errorText != null) Text(errorText!, style: TextStyle(color: Colors.red)),
+            ],
+          );
+        },
+      ),
+      confirm: TextButton(
+        onPressed: () {
+          if (errorText == null) {
+            controller.updateEmail(emailController.text);
+            Get.back();
+          }
+        },
+        child: const Text('OK'),
+      ),
+    );
+  }
+
+  void _editPhone() {
+    final TextEditingController phoneController = TextEditingController(text: controller.phone.value);
+    String? errorText;
+    Get.defaultDialog(
+      title: 'Edytuj numer telefonu',
+      content: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Column(
+            children: [
+              TextField(
+                controller: phoneController,
+                onChanged: (value) {
+                  setState(() {
+                    errorText = (value.length >= 9 && value.length <= 11) ? null : 'Numer musi mieć od 9 do 11 cyfr';
+                  });
+                },
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(11),
+                ],
+                decoration: InputDecoration(
+                  counterText: '${phoneController.text.length}/11',
+                  errorText: errorText,
+                ),
+              ),
+              if (errorText != null) Text(errorText!, style: TextStyle(color: Colors.red)),
+            ],
+          );
+        },
+      ),
+      confirm: TextButton(
+        onPressed: () {
+          if (errorText == null) {
+            controller.updatePhone(phoneController.text);
+            Get.back();
+          }
+        },
+        child: const Text('OK'),
+      ),
+    );
+  }
+
+  void _saveChanges() {
+    if (_validateData()) {
+      Get.snackbar('Sukces', 'Zmiany zostały zapisane');
+    }
+  }
+
+  bool _validateData() {
+    if (controller.name.value.isEmpty || controller.name.value.length > 50) {
+      Get.snackbar('Błąd', 'Imię i nazwisko musi mieć od 1 do 50 znaków');
+      return false;
+    }
+    if (!controller._isValidEmail(controller.email.value)) {
+      Get.snackbar('Błąd', 'Nieprawidłowy adres e-mail');
+      return false;
+    }
+    if (controller.phone.value.length < 9 || controller.phone.value.length > 11) {
+      Get.snackbar('Błąd', 'Numer telefonu musi mieć od 9 do 11 cyfr');
+      return false;
+    }
+    return true;
   }
 }

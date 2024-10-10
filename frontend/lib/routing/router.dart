@@ -15,7 +15,7 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
     case EmissionsViewPageRoute:
       return _getPageRoute(const EmissionsPage());
     case SettingsPageRoute:
-      return _getPageRoute(const SettingsPage());
+      return _getPageRoute(SettingsPage());
     default:
       return _getPageRoute(const PageNotFound());
   }

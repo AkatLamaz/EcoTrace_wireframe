@@ -8,11 +8,12 @@ import "package:get/get.dart";
 import "package:google_fonts/google_fonts.dart";
 import "controllers/navigation_controller.dart";
 import "pages/register/register.dart";
-import "pages/settings/settings.dart"; // Import SettingsPage
+import "pages/settings/settings.dart"; 
 
 void main() {
   Get.put(MenuController());
-  Get.put(NavigationController());
+  Get.put(NavigationController()); //tymczasowo do momentu pobieranie backend
+  Get.put(SettingsController());
   runApp(const MyApp());
 }
 
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: rootRoute, page: () => SiteLayout()),
         GetPage(name: RegisterPageRoute, page: () => RegistrationPage()),
         GetPage(name: AuthentitcationPageRoute, page: () => AuthenticationPage()),
-        GetPage(name: SettingsPageRoute, page: () => const SettingsPage()), // Add SettingsPageRoute
+        GetPage(name: SettingsPageRoute, page: () =>  SettingsPage()), 
       ],
       debugShowCheckedModeBanner: false,
       title: "Dash",
