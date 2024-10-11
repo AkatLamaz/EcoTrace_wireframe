@@ -5,6 +5,7 @@ import 'package:flutter_web_tutorial2/routing/routes.dart';
 import 'package:flutter_web_tutorial2/widgets/custom_text.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_web_tutorial2/pages/authentication/forgot_password.dart';
 
 // ignore: use_key_in_widget_constructors
 class AuthenticationPage extends StatelessWidget {
@@ -79,9 +80,14 @@ class AuthenticationPage extends StatelessWidget {
                     const CustomText(text: "Remember Me")
                   ],
                 ),
-                CustomText(
-                  text: "Forgot Password?",
-                  color: active,
+                InkWell(
+                  onTap: () {
+                    Get.to(() => ForgotPasswordPage());
+                  },
+                  child: CustomText(
+                    text: "Forgot Password?",
+                    color: active,
+                  ),
                 ),
               ],
             ),

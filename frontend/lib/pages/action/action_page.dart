@@ -84,7 +84,7 @@ class _ActionPageState extends State<ActionsPage> {
           crossAxisCount: crossAxisCount, // Ilość przycisków w rzędzie
           crossAxisSpacing: 10, // Odstępy poziome
           mainAxisSpacing: 10, // Odstępy pionowe
-          childAspectRatio: 3.5, // Stosunek szerokości do wysokości, aby kontrolować proporcje
+          childAspectRatio: 6.5, // Stosunek szerokości do wysokości, aby kontrolować proporcje
         ),
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
