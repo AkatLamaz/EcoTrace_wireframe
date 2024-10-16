@@ -13,16 +13,15 @@ class LineChartCard extends StatefulWidget {
 
 class _LineChartCardState extends State<LineChartCard> {
   final data = LineData();
-  int selectedRange = 12; // Domyślnie zakres na 12 miesięcy (cały rok)
+  int selectedRange = 12;
 
-  // Funkcja zwracająca odpowiedni zakres danych w zależności od wyboru
   List<FlSpot> getFilteredData() {
     if (selectedRange == 3) {
-      return data.spots.sublist(0, 13); // Pierwsze 3 miesiące (dane z 12 FlSpot)
+      return data.spots.sublist(0, 13);
     } else if (selectedRange == 6) {
-      return data.spots.sublist(0, 25); // Pierwsze 6 miesięcy (dane z 24 FlSpot)
+      return data.spots.sublist(0, 25);
     }
-    return data.spots; // Domyślnie zwracamy cały rok
+    return data.spots;
   }
 
   @override
@@ -33,21 +32,23 @@ class _LineChartCardState extends State<LineChartCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Dodanie przycisków do wyboru zakresu
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "CO2",
                   style: TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w500, color: light),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
                 ),
                 Row(
                   children: [
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          selectedRange = 3; // Zakres na 3 miesiące
+                          selectedRange = 3;
                         });
                       },
                       child: const Text("3 Miesiące"),
@@ -56,7 +57,7 @@ class _LineChartCardState extends State<LineChartCard> {
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          selectedRange = 6; // Zakres na 6 miesięcy
+                          selectedRange = 6;
                         });
                       },
                       child: const Text("6 Miesięcy"),
@@ -65,7 +66,7 @@ class _LineChartCardState extends State<LineChartCard> {
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          selectedRange = 12; // Zakres na 12 miesięcy
+                          selectedRange = 12;
                         });
                       },
                       child: const Text("Rok"),
@@ -74,8 +75,6 @@ class _LineChartCardState extends State<LineChartCard> {
                 ),
               ],
             ),
-            //const SizedBox(height: 20),
-
             Expanded(
               child: LineChart(
                 LineChartData(
@@ -145,7 +144,7 @@ class _LineChartCardState extends State<LineChartCard> {
                   minX: 0,
                   maxX: selectedRange == 12
                       ? 120
-                      : (selectedRange == 6 ? 60 : 30), // Ustawienie osi X
+                      : (selectedRange == 6 ? 60 : 30),
                   maxY: 105,
                   minY: -5,
                 ),

@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart'; // Dodaj import GetX
+import 'package:provider/provider.dart';
+import '../../constants/style.dart';
+import '../../theme_provider.dart';
+
 
 class SettingsController extends GetxController {
   final name = 'Jan Kowalski'.obs;
@@ -45,34 +49,49 @@ class SettingsController extends GetxController {
 }
 
 class SettingsPage extends StatelessWidget {
-  SettingsPage({Key? key}) : super(key: key);
+  SettingsPage({super.key});
 
   final ImagePicker _picker = ImagePicker();
   final SettingsController controller = Get.put(SettingsController());
 
   @override
   Widget build(BuildContext context) {
+    //final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ustawienia'),
+        title: const Text('Settings'),
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              _buildSectionTitle('Podstawowe informacje'),
+              _buildSectionTitle(context, 'Podstawowe informacje'),
               _buildProfileImage(context),
-              Obx(() => _buildEditableListTile('Imię i nazwisko', controller.name.value, _editName)),
-              Obx(() => _buildEditableListTile('Data urodzenia', controller.birthDate.value.toString().split(' ')[0], _editBirthDate)),
-              Obx(() => _buildEditableListTile('Płeć', controller.gender.value, _editGender)),
+              const SizedBox(height: 5),
+              Obx(() => _buildEditableListTile(context, 'Imię i nazwisko', controller.name.value, _editName)),
+              const SizedBox(height: 5),
+              Obx(() => _buildEditableListTile(context, 'Data urodzenia', controller.birthDate.value.toString().split(' ')[0], _editBirthDate)),
+              const SizedBox(height: 5),
+              Obx(() => _buildEditableListTile(context, 'Płeć', controller.gender.value, _editGender)),
               const SizedBox(height: 16),
-              _buildSectionTitle('Informacje kontaktowe'),
-              Obx(() => _buildEditableListTile('E-mail', controller.email.value, _editEmail)),
-              Obx(() => _buildEditableListTile('Telefon', controller.phone.value, _editPhone)),
+              _buildSectionTitle(context, 'Informacje kontaktowe'),
+              const SizedBox(height: 5),
+              Obx(() => _buildEditableListTile(context, 'E-mail', controller.email.value, _editEmail)),
+              const SizedBox(height: 5),
+              Obx(() => _buildEditableListTile(context, 'Telefon', controller.phone.value, _editPhone)),
+              const SizedBox(height: 16),
+              _buildSectionTitle(context, 'Appearance'),
+              const SizedBox(height: 5),
+              _buildThemeToggle(context),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _saveChanges,
+                style: ElevatedButton.styleFrom(
+                  shadowColor: Colors.black.withOpacity(0.2),
+                  elevation: 4,
+                ),
                 child: const Text('Zapisz zmiany'),
               ),
             ],
@@ -82,12 +101,16 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+        ),
       ),
     );
   }
@@ -107,16 +130,44 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildEditableListTile(String title, String value, Function() onEdit) {
-    return ListTile(
-      title: Text(title),
-      subtitle: Text(value),
-      trailing: IconButton(
-        icon: const Icon(Icons.edit),
-        onPressed: onEdit,
+Widget _buildEditableListTile(BuildContext context, String title, String value, Function() onTap) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Theme.of(context).cardColor,
+      borderRadius: BorderRadius.circular(8.0),
+      border: Border.all(
+        color: lightGrey(context), // Use lightGrey for the border
       ),
-    );
-  }
+      boxShadow: const [
+        BoxShadow(
+          color: shadowColor, // Use the predefined shadow color
+          blurRadius: 4,
+          offset: Offset(0, 2),
+        ),
+      ],
+    ),
+    child: ListTile(
+      title: Text(
+        title,
+        style: TextStyle(
+          color: light(context), // Use the light color function
+        ),
+      ),
+      subtitle: Text(
+        value,
+        style: TextStyle(
+          color: lightGrey(context), // Use the lightGrey color function
+        ),
+      ),
+      trailing: Icon(
+        Icons.edit,
+        color: lightGrey(context), // Use the lightGrey color function
+      ),
+      onTap: onTap,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+    ),
+  );
+}
 
   void _pickImage(BuildContext context) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -161,6 +212,22 @@ class SettingsPage extends StatelessWidget {
         },
         child: const Text('OK'),
       ),
+    );
+  }
+
+  Widget _buildThemeToggle(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    return SwitchListTile(
+      title: Text(
+        'Dark Mode',
+        style: TextStyle(
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+        ),
+      ),
+      value: themeProvider.isDarkMode,
+      onChanged: (value) {
+        themeProvider.toggleTheme(value);
+      },
     );
   }
 

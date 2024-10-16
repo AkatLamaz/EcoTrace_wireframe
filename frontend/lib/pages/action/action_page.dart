@@ -6,6 +6,7 @@ import '../../widgets/action/fashion.dart';
 import '../../widgets/action/purchase.dart';
 import '../../widgets/action/streaming.dart';
 import '../../helpers/responsiveness.dart';
+import '../../constants/style.dart';
 
 class ActionsPage extends StatefulWidget {
   const ActionsPage({super.key});
@@ -119,16 +120,16 @@ class _ActionPageState extends State<ActionsPage> {
           });
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: _selectedAction == actionIndex ? Theme.of(context).primaryColor : Colors.grey,
+          backgroundColor: _selectedAction == actionIndex ? Theme.of(context).primaryColor : light(context),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
         ),
         child: Text(
           text,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Inter Tight',
-            color: Colors.white,
+            color: light(context),
             letterSpacing: 0.0,
           ),
         ),

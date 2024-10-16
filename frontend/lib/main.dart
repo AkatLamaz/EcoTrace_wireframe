@@ -9,12 +9,20 @@ import "package:google_fonts/google_fonts.dart";
 import "controllers/navigation_controller.dart";
 import "pages/register/register.dart";
 import "pages/settings/settings.dart"; 
+import 'package:provider/provider.dart';
+import 'theme_provider.dart';
+import 'constants/style.dart';
 
 void main() {
   Get.put(MenuController());
   Get.put(NavigationController()); //tymczasowo do momentu pobieranie backend
   Get.put(SettingsController());
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -22,35 +30,53 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      unknownRoute: GetPage(
-        name: "/not-found", 
-        page: () => const PageNotFound(),
-        transition: Transition.fadeIn
-      ),
-      initialRoute: AuthentitcationPageRoute,
-      getPages: [
-        GetPage(name: rootRoute, page: () => SiteLayout()),
-        GetPage(name: RegisterPageRoute, page: () => RegistrationPage()),
-        GetPage(name: AuthentitcationPageRoute, page: () => AuthenticationPage()),
-        GetPage(name: SettingsPageRoute, page: () =>  SettingsPage()), 
-      ],
-      debugShowCheckedModeBanner: false,
-      title: "Dash",
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        textTheme: GoogleFonts.mulishTextTheme(
-          Theme.of(context).textTheme
-          ).apply(
-          bodyColor: Colors.black
-        ),
-        pageTransitionsTheme: const PageTransitionsTheme(builders: {
-          TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-          TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder()
-        }),
-        primaryColor: Colors.blue
-      ),
-      //home: AuthenticationPage(),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return GetMaterialApp(
+          unknownRoute: GetPage(
+            name: "/not-found", 
+            page: () => const PageNotFound(),
+            transition: Transition.fadeIn
+          ),
+          initialRoute: AuthentitcationPageRoute,
+          getPages: [
+            GetPage(name: rootRoute, page: () => SiteLayout()),
+            GetPage(name: RegisterPageRoute, page: () => RegistrationPage()),
+            GetPage(name: AuthentitcationPageRoute, page: () => AuthenticationPage()),
+            GetPage(name: SettingsPageRoute, page: () =>  SettingsPage()), 
+          ],
+          debugShowCheckedModeBanner: false,
+          title: "Dash",
+          themeMode: themeProvider.themeMode,
+          theme: ThemeData(
+            primaryColor: Colors.blue,
+            scaffoldBackgroundColor: light(context),
+            textTheme: GoogleFonts.mulishTextTheme(
+              Theme.of(context).textTheme
+            ).apply(
+              bodyColor: Colors.black
+            ),
+            pageTransitionsTheme: const PageTransitionsTheme(builders: {
+              TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+              TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder()
+            }),
+          ),
+          darkTheme: ThemeData(
+            scaffoldBackgroundColor: Colors.grey[900],
+            textTheme: GoogleFonts.mulishTextTheme(
+              Theme.of(context).textTheme
+            ).apply(
+              bodyColor: light(context)
+            ),
+            pageTransitionsTheme: const PageTransitionsTheme(builders: {
+              TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+              TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder()
+            }),
+            primaryColor: Colors.blueGrey
+          ),
+          //home: AuthenticationPage(),
+        );
+      },
     );
   }
 }

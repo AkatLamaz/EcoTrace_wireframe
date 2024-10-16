@@ -17,7 +17,7 @@ class SideMenu extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return Container(
-            color: light,
+            color: light(context),
             child: ListView(
               children: [
                 if(ResponsiveWidget.isSmallScreen(context))
@@ -50,11 +50,11 @@ class SideMenu extends StatelessWidget {
                     ),
                   ],
                 ),
-                    Divider(color: lightGrey.withAlpha((0.1 * 255).toInt()), ),
-
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: sideMenuItems.map((item) => SideMenuItem(
+                //Divider(color: lightGrey(context).withOpacity(0.1)),
+                Divider(color: lightGrey(context).withAlpha((0.1 * 255).toInt()), ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: sideMenuItems.map((item) => SideMenuItem(
                 itemName: item.name,
                 onTap: (){
                   if(item.route == AuthentitcationPageRoute){

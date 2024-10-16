@@ -23,8 +23,8 @@ class ScopeWidget extends StatelessWidget {
     double itemWidth = (adjustedScreenWidth * widthFactor).clamp(50.0, maxWidth);
 
     return Wrap(
-      spacing: spacing, // Odstęp między widgetami
-      runSpacing: spacing, // Odstęp między wierszami
+      spacing: spacing,
+      runSpacing: spacing,
       children: data.map((scopeData) {
         return Container(
           constraints: BoxConstraints(
@@ -32,59 +32,54 @@ class ScopeWidget extends StatelessWidget {
             maxWidth: maxWidth,
           ),
           width: itemWidth,
-          child: _buildScopeItem(scopeData),
+          child: _buildScopeItem(context, scopeData),
         );
       }).toList(),
     );
   }
 
-Widget _buildScopeItem(ScopeData scopeData) {
-  return Card(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(15.0),
-    ),
-    elevation: 4,
-    child: Container(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start, // Ustawia Scope1 lekko wyżej
-        children: [
-          // Wykres po lewej stronie
-          _buildPieChart(scopeData),
-          const SizedBox(width: 16), // Odstęp między wykresem a tekstem
-          // Kolumna z tekstem po prawej stronie
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Scope1 lekko wyżej
-              Text(
-                scopeData.category,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 8),
-              // CO2
-              Text(
-                '${scopeData.amount.toStringAsFixed(2)} ton CO2-eq',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-          // Spacer, aby strzałka była bardziej wysunięta na prawo
-          const Spacer(),
-          // Strzałka po prawej
-          Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[600]),
-        ],
+  Widget _buildScopeItem(BuildContext context, ScopeData scopeData) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
       ),
-    ),
-  );
-}
-
+      elevation: 8,
+      color: Theme.of(context).cardColor,
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildPieChart(scopeData),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  scopeData.category,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '${scopeData.amount.toStringAsFixed(2)} ton CO2-eq',
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+            const Spacer(),
+            Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).textTheme.bodyLarge?.color),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildPieChart(ScopeData scopeData) {
     return SizedBox(

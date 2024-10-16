@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants/style.dart';
+
 class YearSelector extends StatelessWidget {
   final int selectedYear;
   final List<int> availableYears;
@@ -15,6 +17,8 @@ class YearSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Theme.of(context).cardColor,
+      elevation: 8,
       title: const Text('Select Year'),
       content: ConstrainedBox(
         constraints: const BoxConstraints(
@@ -40,16 +44,23 @@ class YearSelector extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: selectedYear == availableYears[index]
-                        ? Colors.blue
-                        : Colors.grey[200], // Zmiana koloru dla wybranego roku
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(8.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: Text(
                     '${availableYears[index]}',
                     style: TextStyle(
                       color: selectedYear == availableYears[index]
-                          ? Colors.white
-                          : Colors.black,
+                          ? light(context)
+                          : Theme.of(context).textTheme.bodyLarge?.color,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),

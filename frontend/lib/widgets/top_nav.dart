@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_tutorial2/constants/controllers.dart';
 import 'package:flutter_web_tutorial2/helpers/responsiveness.dart';
-import 'package:flutter_web_tutorial2/widgets/custom_text.dart';// Dodaj import GetX
+import 'package:flutter_web_tutorial2/widgets/custom_text.dart';
 import '../constants/style.dart';
 import '../routing/routes.dart'; // Import routes
 import 'package:get/get.dart';
@@ -39,7 +39,7 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) {
           visible: true,
           child: CustomText(
             text: "Dash",
-            color: lightGrey,
+            color: lightGrey(context),
             size: 20,
             weight: FontWeight.bold,
           ),
@@ -48,10 +48,19 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) {
         IconButton(
           icon: Icon(
             Icons.settings,
-            color: dark.withAlpha((0.7 * 255).toInt()),
+            color: dark(context).withOpacity(0.7),
           ),
           onPressed: () {
             navigationController.navigateTo(SettingsPageRoute);
+          },
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.dark_mode,
+            color: dark(context).withOpacity(0.7),
+          ),
+          onPressed: () {
+            // Toggle theme here
           },
         ),
         Stack(
@@ -59,7 +68,7 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) {
             IconButton(
               icon: Icon(
                 Icons.notifications,
-                color: dark.withAlpha((0.7 * 255).toInt()),
+                color: dark(context),
               ),
               onPressed: () {},
             ),
@@ -73,7 +82,7 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) {
                 decoration: BoxDecoration(
                   color: active,
                   borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: light, width: 2),
+                  border: Border.all(color: light(context), width: 2),
                 ),
               ),
             ),
@@ -82,38 +91,38 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) {
         Container(
           width: 1,
           height: 22,
-          color: lightGrey,
+          color: lightGrey(context),
         ),
         const SizedBox(
           width: 24,
         ),
         Obx(() => CustomText(
           text: settingsController.name.value, // Pobieranie nazwy użytkownika z kontrolera
-          color: lightGrey,
+          color: lightGrey(context),
         )),
         const SizedBox(
           width: 16,
         ),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(30),
           ),
           child: Container(
             padding: const EdgeInsets.all(2),
             margin: const EdgeInsets.all(2),
             child: CircleAvatar(
-              backgroundColor: light,
+              backgroundColor: light(context),
               child: Icon(
                 Icons.person_outline,
-                color: dark,
+                color: dark(context),
               ),
             ),
           ),
         ),
       ],
     ),
-    iconTheme: IconThemeData(color: dark), // Corrected iconTheme syntax
-    backgroundColor: light //Colors.transparent, // Added missing comma
+    iconTheme: IconThemeData(color: dark(context)), // Corrected iconTheme syntax
+    backgroundColor: light(context) //Colors.transparent, // Added missing comma
   );
 }

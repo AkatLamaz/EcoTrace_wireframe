@@ -44,7 +44,7 @@ class AuthenticationPage extends StatelessWidget {
               children: [
                 CustomText(
                   text: "Welcome back!",
-                  color: lightGrey,
+                  color: lightGrey(context),
                 )
               ],
             ),

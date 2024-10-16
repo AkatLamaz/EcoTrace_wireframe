@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../constants/style.dart';
 import '../data/scope_data.dart';
-import '../helpers/responsiveness.dart'; // Importujemy plik z wartościami
+import '../helpers/responsiveness.dart';
 
 class ScopePieChart extends StatelessWidget {
   const ScopePieChart({super.key});
@@ -28,7 +29,7 @@ class ScopePieChart extends StatelessWidget {
         value: data.amount.toDouble(),
         title: '${data.amount} ton',
         radius: 60,
-        titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+        titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: light(context)),
       );
     }).toList();
 
@@ -44,6 +45,7 @@ class ScopePieChart extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
+              color: Theme.of(context).cardColor,
               child: Column(
                 children: [
                   const Text(
@@ -91,7 +93,7 @@ class ScopePieChart extends StatelessWidget {
           height: 12,
           decoration: BoxDecoration(
             color: color,
-            borderRadius: BorderRadius.circular(6), // Zaokrąglone rogi
+            borderRadius: BorderRadius.circular(6),
           ),
         ),
         const SizedBox(width: 5),
