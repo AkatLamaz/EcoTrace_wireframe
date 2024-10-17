@@ -14,7 +14,10 @@ final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
     return Scaffold(
       key: scaffoldKey,
       extendBodyBehindAppBar: false,
-      appBar: topNavigationBar(context, scaffoldKey),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: topNavigationBar(context, scaffoldKey),
+      ),
       drawer: const Drawer(
         child: SideMenu(),
       ),

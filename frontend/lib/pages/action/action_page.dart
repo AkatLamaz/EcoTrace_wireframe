@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../widgets/action/energy.dart';
 import '../../widgets/action/meal.dart';
 import '../../widgets/action/transport.dart';
@@ -7,6 +8,7 @@ import '../../widgets/action/purchase.dart';
 import '../../widgets/action/streaming.dart';
 import '../../helpers/responsiveness.dart';
 import '../../constants/style.dart';
+import '../../theme_provider.dart';
 
 class ActionsPage extends StatefulWidget {
   const ActionsPage({super.key});
@@ -30,16 +32,31 @@ class _ActionPageState extends State<ActionsPage> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Actions'),
-      ),
-      body: ResponsiveWidget(
-        largeScreen: _buildLargeScreen(context),
-        mediumScreen: _buildMediumScreen(context),
-        smallScreen: _buildSmallScreen(context),
-      ),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Scaffold(
+          backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
+          appBar: AppBar(
+            title: Text(
+              'Action Page',
+              style: TextStyle(
+                color: themeProvider.isDarkMode ? light(context) : dark(context),
+              ),
+            ),
+            backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
+          ),
+          body: Column(
+            children: [
+              _buildButtonGrid(context, crossAxisCount: 3),
+              const SizedBox(height: 20),
+              _buildFormSection(),
+              _buildActionButtons(),
+            ],
+          ),
+        );
+      },
     );
   }
 

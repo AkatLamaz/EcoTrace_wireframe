@@ -56,52 +56,55 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final themeProvider = Provider.of<ThemeProvider>(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              _buildSectionTitle(context, 'Podstawowe informacje'),
-              _buildProfileImage(context),
-              const SizedBox(height: 5),
-              Obx(() => _buildEditableListTile(context, 'Imię i nazwisko', controller.name.value, _editName)),
-              const SizedBox(height: 5),
-              Obx(() => _buildEditableListTile(context, 'Data urodzenia', controller.birthDate.value.toString().split(' ')[0], _editBirthDate)),
-              const SizedBox(height: 5),
-              Obx(() => _buildEditableListTile(context, 'Płeć', controller.gender.value, _editGender)),
-              const SizedBox(height: 16),
-              _buildSectionTitle(context, 'Informacje kontaktowe'),
-              const SizedBox(height: 5),
-              Obx(() => _buildEditableListTile(context, 'E-mail', controller.email.value, _editEmail)),
-              const SizedBox(height: 5),
-              Obx(() => _buildEditableListTile(context, 'Telefon', controller.phone.value, _editPhone)),
-              const SizedBox(height: 16),
-              _buildSectionTitle(context, 'Appearance'),
-              const SizedBox(height: 5),
-              _buildThemeToggle(context),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _saveChanges,
-                style: ElevatedButton.styleFrom(
-                  shadowColor: Colors.black.withOpacity(0.2),
-                  elevation: 4,
-                ),
-                child: const Text('Zapisz zmiany'),
-              ),
-            ],
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Settings'),
+            backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
           ),
-        ),
-      ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  _buildSectionTitle(context, 'Podstawowe informacje', themeProvider),
+                  _buildProfileImage(context, themeProvider),
+                  const SizedBox(height: 5),
+                  Obx(() => _buildEditableListTile(context, 'Imię i nazwisko', controller.name.value, () => _editName(context), themeProvider)),
+                  const SizedBox(height: 5),
+                  Obx(() => _buildEditableListTile(context, 'Data urodzenia', controller.birthDate.value.toString().split(' ')[0], () => _editBirthDate(context), themeProvider)),
+                  const SizedBox(height: 5),
+                  Obx(() => _buildEditableListTile(context, 'Płeć', controller.gender.value, () => _editGender(context), themeProvider)),
+                  const SizedBox(height: 16),
+                  _buildSectionTitle(context, 'Informacje kontaktowe', themeProvider),
+                  const SizedBox(height: 5),
+                  Obx(() => _buildEditableListTile(context, 'E-mail', controller.email.value, () => _editEmail(context), themeProvider)),
+                  const SizedBox(height: 5),
+                  Obx(() => _buildEditableListTile(context, 'Telefon', controller.phone.value, () => _editPhone(context), themeProvider)),
+                  const SizedBox(height: 16),
+                  _buildSectionTitle(context, 'Appearance', themeProvider),
+                  const SizedBox(height: 5),
+                  _buildThemeToggle(context, themeProvider),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _saveChanges,
+                    style: ElevatedButton.styleFrom(
+                      iconColor: shadowColor(context),
+                      elevation: 4,
+                    ),
+                    child: const Text('Zapisz zmiany'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildSectionTitle(BuildContext context, String title) {
+  Widget _buildSectionTitle(BuildContext context, String title, ThemeProvider themeProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Text(
@@ -109,17 +112,18 @@ class SettingsPage extends StatelessWidget {
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Theme.of(context).textTheme.bodyLarge?.color,
+          color: themeProvider.isDarkMode ? light(context) : dark(context),
         ),
       ),
     );
   }
 
-  Widget _buildProfileImage(BuildContext context) {
+  Widget _buildProfileImage(BuildContext context, ThemeProvider themeProvider) {
     return GestureDetector(
       onTap: () => _pickImage(context),
       child: Obx(() => CircleAvatar(
         radius: 40,
+        backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
         backgroundImage: controller.profileImage.value != null
             ? FileImage(File(controller.profileImage.value!.path))
             : null,
@@ -130,44 +134,44 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-Widget _buildEditableListTile(BuildContext context, String title, String value, Function() onTap) {
-  return Container(
-    decoration: BoxDecoration(
-      color: Theme.of(context).cardColor,
-      borderRadius: BorderRadius.circular(8.0),
-      border: Border.all(
-        color: lightGrey(context), // Use lightGrey for the border
-      ),
-      boxShadow: const [
-        BoxShadow(
-          color: shadowColor, // Use the predefined shadow color
-          blurRadius: 4,
-          offset: Offset(0, 2),
+  Widget _buildEditableListTile(BuildContext context, String title, String value, Function() onTap, ThemeProvider themeProvider) {
+    return Container(
+      decoration: BoxDecoration(
+        color: themeProvider.isDarkMode ? dark(context) : light(context),
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(
+          color: themeProvider.isDarkMode ? lightGrey(context) : shadowColor(context),
         ),
-      ],
-    ),
-    child: ListTile(
-      title: Text(
-        title,
-        style: TextStyle(
-          color: light(context), // Use the light color function
+        boxShadow: [
+          BoxShadow(
+            color: shadowColor(context),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ListTile(
+        title: Text(
+          title,
+          style: TextStyle(
+            color: themeProvider.isDarkMode ? light(context) : dark(context),
+          ),
         ),
-      ),
-      subtitle: Text(
-        value,
-        style: TextStyle(
-          color: lightGrey(context), // Use the lightGrey color function
+        subtitle: Text(
+          value,
+          style: TextStyle(
+            color: themeProvider.isDarkMode ? lightGrey(context) : dark(context),
+          ),
         ),
+        trailing: Icon(
+          Icons.edit,
+          color: themeProvider.isDarkMode ? lightGrey(context) : dark(context),
+        ),
+        onTap: onTap,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
       ),
-      trailing: Icon(
-        Icons.edit,
-        color: lightGrey(context), // Use the lightGrey color function
-      ),
-      onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-    ),
-  );
-}
+    );
+  }
 
   void _pickImage(BuildContext context) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -176,11 +180,17 @@ Widget _buildEditableListTile(BuildContext context, String title, String value, 
     }
   }
 
-  void _editName() {
+  void _editName(BuildContext context) {
     final TextEditingController nameController = TextEditingController(text: controller.name.value);
     String? errorText;
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+
     Get.defaultDialog(
       title: 'Edytuj imię i nazwisko',
+      titleStyle: TextStyle(
+        color: themeProvider.isDarkMode ? light(context) : dark(context),
+      ),
+      backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return Column(
@@ -196,6 +206,11 @@ Widget _buildEditableListTile(BuildContext context, String title, String value, 
                 decoration: InputDecoration(
                   counterText: '${nameController.text.length}/50',
                   errorText: errorText,
+                  fillColor: themeProvider.isDarkMode ? dark(context) : light(context),
+                  filled: true,
+                ),
+                style: TextStyle(
+                  color: themeProvider.isDarkMode ? light(context) : dark(context),
                 ),
               ),
               if (errorText != null) Text(errorText!, style: TextStyle(color: Colors.red)),
@@ -215,8 +230,7 @@ Widget _buildEditableListTile(BuildContext context, String title, String value, 
     );
   }
 
-  Widget _buildThemeToggle(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
+  Widget _buildThemeToggle(BuildContext context, ThemeProvider themeProvider) {
     return SwitchListTile(
       title: Text(
         'Dark Mode',
@@ -231,35 +245,67 @@ Widget _buildEditableListTile(BuildContext context, String title, String value, 
     );
   }
 
-  void _editBirthDate() {
-    Get.defaultDialog(
-      title: 'Edytuj datę urodzenia',
-      content: Obx(() => Text(controller.birthDate.value.toString().split(' ')[0])),
-      confirm: TextButton(
-        onPressed: () async {
-          final date = await showDatePicker(
-            context: Get.context!,
-            initialDate: controller.birthDate.value,
-            firstDate: DateTime(1900),
-            lastDate: DateTime.now(),
-          );
-          if (date != null) {
-            controller.updateBirthDate(date);
-          }
-          Get.back();
-        },
-        child: const Text('Wybierz datę'),
-      ),
-    );
-  }
+void _editBirthDate(BuildContext context) {
+  final themeProvider = Provider.of<ThemeProvider>(context, listen: false); // Access the ThemeProvider using Provider
 
-  void _editGender() {
+  Get.defaultDialog(
+    title: 'Edytuj datę urodzenia',
+    titleStyle: TextStyle(
+      color: themeProvider.isDarkMode ? light(context) : dark(context),
+    ),
+    backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
+    content: Obx(() => Text(
+      controller.birthDate.value.toString().split(' ')[0],
+      style: TextStyle(
+        color: themeProvider.isDarkMode ? lightGrey(context) : dark(context),
+      ),
+    )),
+    confirm: TextButton(
+      onPressed: () async {
+        final date = await showDatePicker(
+          context: context, // Use the passed context here
+          initialDate: controller.birthDate.value,
+          firstDate: DateTime(1900),
+          lastDate: DateTime.now(),
+          builder: (BuildContext context, Widget? child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: themeProvider.isDarkMode
+                    ? const ColorScheme.dark()
+                    : const ColorScheme.light(),
+              ),
+              child: child!,
+            );
+          },
+        );
+        if (date != null) {
+          controller.updateBirthDate(date);
+        }
+        Get.back();
+      },
+      child: const Text('Wybierz datę'),
+    ),
+  );
+}
+
+  void _editGender(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+
     Get.defaultDialog(
       title: 'Wybierz płeć',
+      titleStyle: TextStyle(
+        color: themeProvider.isDarkMode ? light(context) : dark(context),
+      ),
+      backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
       content: Column(
         children: ['Mężczyzna', 'Kobieta', 'Inna'].map((gender) => 
           RadioListTile<String>(
-            title: Text(gender),
+            title: Text(
+              gender,
+              style: TextStyle(
+                color: themeProvider.isDarkMode ? lightGrey(context) : dark(context),
+              ),
+            ),
             value: gender,
             groupValue: controller.gender.value,
             onChanged: (value) {
@@ -272,11 +318,17 @@ Widget _buildEditableListTile(BuildContext context, String title, String value, 
     );
   }
 
-  void _editEmail() {
+  void _editEmail(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final TextEditingController emailController = TextEditingController(text: controller.email.value);
     String? errorText;
+
     Get.defaultDialog(
       title: 'Edytuj e-mail',
+      titleStyle: TextStyle(
+        color: themeProvider.isDarkMode ? light(context) : dark(context),
+      ),
+      backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return Column(
@@ -291,6 +343,11 @@ Widget _buildEditableListTile(BuildContext context, String title, String value, 
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   errorText: errorText,
+                  fillColor: themeProvider.isDarkMode ? dark(context) : light(context),
+                  filled: true,
+                ),
+                style: TextStyle(
+                  color: themeProvider.isDarkMode ? light(context) : dark(context),
                 ),
               ),
               if (errorText != null) Text(errorText!, style: TextStyle(color: Colors.red)),
@@ -310,11 +367,17 @@ Widget _buildEditableListTile(BuildContext context, String title, String value, 
     );
   }
 
-  void _editPhone() {
+  void _editPhone(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final TextEditingController phoneController = TextEditingController(text: controller.phone.value);
     String? errorText;
+
     Get.defaultDialog(
       title: 'Edytuj numer telefonu',
+      titleStyle: TextStyle(
+        color: themeProvider.isDarkMode ? light(context) : dark(context),
+      ),
+      backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return Column(
@@ -334,6 +397,11 @@ Widget _buildEditableListTile(BuildContext context, String title, String value, 
                 decoration: InputDecoration(
                   counterText: '${phoneController.text.length}/11',
                   errorText: errorText,
+                  fillColor: themeProvider.isDarkMode ? dark(context) : light(context),
+                  filled: true,
+                ),
+                style: TextStyle(
+                  color: themeProvider.isDarkMode ? light(context) : dark(context),
                 ),
               ),
               if (errorText != null) Text(errorText!, style: TextStyle(color: Colors.red)),

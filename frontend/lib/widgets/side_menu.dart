@@ -5,8 +5,9 @@ import 'package:flutter_web_tutorial2/helpers/responsiveness.dart';
 import 'package:flutter_web_tutorial2/routing/routes.dart';
 import 'package:flutter_web_tutorial2/widgets/custom_text.dart';
 import 'package:get/get.dart';
-
+import 'package:provider/provider.dart';
 import 'side_menu_item.dart';
+import '../theme_provider.dart';
 
 
 class SideMenu extends StatelessWidget {
@@ -16,8 +17,12 @@ class SideMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
-    return Container(
-            color: light(context),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Container(
+            decoration: BoxDecoration(
+            color: themeProvider.isDarkMode ? dark(context) : light(context), // Use theme-aware colors
+            ),
             child: ListView(
               children: [
                 if(ResponsiveWidget.isSmallScreen(context))
@@ -76,5 +81,7 @@ class SideMenu extends StatelessWidget {
               ],
             ),
           );
+      },
+    );
   }
 } 
