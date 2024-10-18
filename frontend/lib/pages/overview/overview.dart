@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Import provider package
+import '../../constants/style.dart';
+import '../../theme_provider.dart';// Import style for colors
 import 'dashboard.dart';
 
 class OverViewPage extends StatelessWidget {
@@ -6,30 +9,44 @@ class OverViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Overview'),
-      ),
-      body: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height,
+  return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Overview'),
+            backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
+            iconTheme: IconThemeData(
+              color: themeProvider.isDarkMode ? light(context) : dark(context), // Change arrow color based on theme
+            ),
+            titleTextStyle: TextStyle(
+              color: themeProvider.isDarkMode ? light(context) : dark(context), // Change title text color based on theme
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          child: const Column(
-            children: [
-              DashboardWidget(),
-              //GreetingSection(),
-              // ActionStepsSection(),
-              // RegisterSection(),
-              // FeedbackSection(),
-              // StatisticsSection(),
-              // AchievementsSection(),
-              // OtherLinksSection(),
-              // WhyThisMattersSection(),
-            ],
+          body: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: const Column(
+                children: [
+                  DashboardWidget(),
+                  //GreetingSection(),
+                  // ActionStepsSection(),
+                  // RegisterSection(),
+                  // FeedbackSection(),
+                  // StatisticsSection(),
+                  // AchievementsSection(),
+                  // OtherLinksSection(),
+                  // WhyThisMattersSection(),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+          backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context), // Adjust background color based on theme
+        );
+      },
     );
   }
 }

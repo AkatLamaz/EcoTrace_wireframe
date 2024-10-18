@@ -34,18 +34,20 @@ class _ActionPageState extends State<ActionsPage> {
   @override
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
+  return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return Scaffold(
-          backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
           appBar: AppBar(
-            title: Text(
-              'Action Page',
-              style: TextStyle(
-                color: themeProvider.isDarkMode ? light(context) : dark(context),
-              ),
-            ),
+            title: const Text('Action'),
             backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
+            iconTheme: IconThemeData(
+              color: themeProvider.isDarkMode ? light(context) : dark(context), // Change arrow color based on theme
+            ),
+            titleTextStyle: TextStyle(
+              color: themeProvider.isDarkMode ? light(context) : dark(context), // Change title text color based on theme
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           body: Column(
             children: [

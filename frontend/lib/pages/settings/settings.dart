@@ -56,12 +56,20 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
+  return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Settings'),
             backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
+            iconTheme: IconThemeData(
+              color: themeProvider.isDarkMode ? light(context) : dark(context), // Change arrow color based on theme
+            ),
+            titleTextStyle: TextStyle(
+              color: themeProvider.isDarkMode ? light(context) : dark(context), // Change title text color based on theme
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -404,7 +412,7 @@ void _editBirthDate(BuildContext context) {
                   color: themeProvider.isDarkMode ? light(context) : dark(context),
                 ),
               ),
-              if (errorText != null) Text(errorText!, style: TextStyle(color: Colors.red)),
+              if (errorText != null) Text(errorText!, style: const TextStyle(color: Colors.red)),
             ],
           );
         },
