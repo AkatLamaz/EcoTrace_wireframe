@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../theme_provider.dart';
+import '../../constants/style.dart';
 import '/data/vehicle_service.dart'; 
 import 'package:dropdown_search/dropdown_search.dart'; 
 
@@ -74,55 +77,67 @@ class _TransportFormState extends State<TransportForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Transport'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height - kToolbarHeight - 48,
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Transport'),
+            centerTitle: true, // Center the title
+            backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
+            automaticallyImplyLeading: false, // Remove the back button
+            titleTextStyle: TextStyle(
+              color: themeProvider.isDarkMode ? light(context) : dark(context),
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
-            child: Column(
-              children: [
-                _buildDropdownSearchField('Division', _selectedDivision, (value) {
-                  setState(() {
-                    _selectedDivision = value;
-                    _filterData(); 
-                  });
-                }, _divisions),
-                _buildDropdownSearchField('Model name', _selectedModelName, (value) {
-                  setState(() {
-                    _selectedModelName = value;
-                    _filterData(); 
-                  });
-                }, _filteredModelNames),
-                Row(
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height - kToolbarHeight - 48,
+                ),
+                child: Column(
                   children: [
-                    Expanded(
-                      child: _buildDropdownField('Model Year', _selectedModelYear, (value) {
-                        setState(() {
-                          _selectedModelYear = value;
-                        });
-                      }, _modelYears),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _buildDropdownField('Fuel type', _selectedFuelType, (value) {
-                        setState(() {
-                          _selectedFuelType = value;
-                        });
-                      }, _filteredFuelTypes),
+                    _buildDropdownSearchField('Division', _selectedDivision, (value) {
+                      setState(() {
+                        _selectedDivision = value;
+                        _filterData();
+                      });
+                    }, _divisions),
+                    _buildDropdownSearchField('Model name', _selectedModelName, (value) {
+                      setState(() {
+                        _selectedModelName = value;
+                        _filterData();
+                      });
+                    }, _filteredModelNames),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildDropdownField('Model Year', _selectedModelYear, (value) {
+                            setState(() {
+                              _selectedModelYear = value;
+                            });
+                          }, _modelYears),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildDropdownField('Fuel type', _selectedFuelType, (value) {
+                            setState(() {
+                              _selectedFuelType = value;
+                            });
+                          }, _filteredFuelTypes),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

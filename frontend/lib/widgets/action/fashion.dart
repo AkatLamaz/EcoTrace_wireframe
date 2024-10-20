@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../theme_provider.dart';
+import '../../constants/style.dart';
 import 'package:flutter/services.dart';
 
 class FashionForm extends StatefulWidget {
@@ -32,32 +35,44 @@ class _FashionFormState extends State<FashionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Fashion Consumption'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              _buildDropdownSearchField('Fashion Item', _selectedFashionItem, (value) {
-                setState(() {
-                  _selectedFashionItem = value;
-                });
-              }, _emissionFactors.keys.toList()),
-              _buildTextField('Number of Items', _itemsController),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _calculateEmissions,
-                child: const Text('Calculate Emissions'),
-              ),
-              const SizedBox(height: 16),
-              _buildEmissionResult('$_selectedFashionItem CO₂ Emission', _co2Emission),
-            ],
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Fashion Consumption'),
+            centerTitle: true,
+            backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
+            automaticallyImplyLeading: false,
+            titleTextStyle: TextStyle(
+              color: themeProvider.isDarkMode ? light(context) : dark(context),
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-      ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  _buildDropdownSearchField('Fashion Item', _selectedFashionItem, (value) {
+                    setState(() {
+                      _selectedFashionItem = value;
+                    });
+                  }, _emissionFactors.keys.toList()),
+                  _buildTextField('Number of Items', _itemsController),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _calculateEmissions,
+                    child: const Text('Calculate Emissions'),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildEmissionResult('$_selectedFashionItem CO₂ Emission', _co2Emission),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

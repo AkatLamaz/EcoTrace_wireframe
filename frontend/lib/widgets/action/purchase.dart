@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../theme_provider.dart';
+import '../../constants/style.dart';
 import 'package:flutter/services.dart';
 
 class PurchaseForm extends StatefulWidget {
@@ -32,32 +35,44 @@ class _PurchaseFormState extends State<PurchaseForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Purchase Consumption'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              _buildDropdownSearchField('Purchase Type', _selectedPurchaseType, (value) {
-                setState(() {
-                  _selectedPurchaseType = value;
-                });
-              }, _emissionFactors.keys.toList()),
-              _buildTextField('Amount Purchased', _amountController),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _calculateEmissions,
-                child: const Text('Calculate Emissions'),
-              ),
-              const SizedBox(height: 16),
-              _buildEmissionResult('$_selectedPurchaseType CO₂ Emission', _co2Emission),
-            ],
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Purchase Consumption'),
+            centerTitle: true,
+            backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
+            automaticallyImplyLeading: false,
+            titleTextStyle: TextStyle(
+              color: themeProvider.isDarkMode ? light(context) : dark(context),
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-      ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  _buildDropdownSearchField('Purchase Type', _selectedPurchaseType, (value) {
+                    setState(() {
+                      _selectedPurchaseType = value;
+                    });
+                  }, _emissionFactors.keys.toList()),
+                  _buildTextField('Amount Purchased', _amountController),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _calculateEmissions,
+                    child: const Text('Calculate Emissions'),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildEmissionResult('$_selectedPurchaseType CO₂ Emission', _co2Emission),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

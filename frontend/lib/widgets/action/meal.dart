@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../theme_provider.dart';
+import '../../constants/style.dart';
 import 'package:xml/xml.dart' as xml;
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -39,37 +42,49 @@ class _MealFormState extends State<MealForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Meal'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              _buildDropdownSearchField('Ingredient Name', _selectedIngredient, (value) {
-                setState(() {
-                  _selectedIngredient = value;
-                });
-              }, _carbonFootprintPer100g.keys.toList()),
-              _buildTextField('Weight (g)', _weightController, isNumber: true),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _addIngredient,
-                child: const Text('Add Ingredient'),
-              ),
-              const SizedBox(height: 16),
-              _buildIngredientList(),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _saveMeal,
-                child: const Text('Save Meal'),
-              ),
-            ],
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Create Meal'),
+            centerTitle: true,
+            backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
+            automaticallyImplyLeading: false,
+            titleTextStyle: TextStyle(
+              color: themeProvider.isDarkMode ? light(context) : dark(context),
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-      ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  _buildDropdownSearchField('Ingredient Name', _selectedIngredient, (value) {
+                    setState(() {
+                      _selectedIngredient = value;
+                    });
+                  }, _carbonFootprintPer100g.keys.toList()),
+                  _buildTextField('Weight (g)', _weightController, isNumber: true),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _addIngredient,
+                    child: const Text('Add Ingredient'),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildIngredientList(),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _saveMeal,
+                    child: const Text('Save Meal'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

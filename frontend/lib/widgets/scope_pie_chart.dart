@@ -65,7 +65,7 @@ class ScopePieChart extends StatelessWidget {
                         style: TextStyle(fontSize: 14, color: Colors.grey),
                       ),
                       SizedBox(
-                        height: 250,
+                        height: 265,
                         child: PieChart(
                           PieChartData(
                             sections: sections,

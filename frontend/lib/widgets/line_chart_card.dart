@@ -122,7 +122,7 @@ class _LineChartCardState extends State<LineChartCard> {
                     ),
                   ),
                   borderData: FlBorderData(show: false),
-                  lineBarsData: [
+                   lineBarsData: [
                     LineChartBarData(
                       color: selectionColor,
                       barWidth: 2.5,

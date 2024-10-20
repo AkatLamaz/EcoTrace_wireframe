@@ -6,7 +6,7 @@ import '../../widgets/action/transport.dart';
 import '../../widgets/action/fashion.dart';
 import '../../widgets/action/purchase.dart';
 import '../../widgets/action/streaming.dart';
-import '../../helpers/responsiveness.dart';
+//import '../../helpers/responsiveness.dart';
 import '../../constants/style.dart';
 import '../../theme_provider.dart';
 
@@ -32,104 +32,109 @@ class _ActionPageState extends State<ActionsPage> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
-  return Consumer<ThemeProvider>(
+    return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Action'),
             backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
             iconTheme: IconThemeData(
-              color: themeProvider.isDarkMode ? light(context) : dark(context), // Change arrow color based on theme
+              color: themeProvider.isDarkMode ? light(context) : dark(context),
             ),
             titleTextStyle: TextStyle(
-              color: themeProvider.isDarkMode ? light(context) : dark(context), // Change title text color based on theme
+              color: themeProvider.isDarkMode ? light(context) : dark(context),
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
-          body: Column(
-            children: [
-              _buildButtonGrid(context, crossAxisCount: 3),
-              const SizedBox(height: 20),
-              _buildFormSection(),
-              _buildActionButtons(),
-            ],
+          body: LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth >= 1200) {
+                return _buildLargeScreen(context, themeProvider);
+              } else if (constraints.maxWidth >= 800) {
+                return _buildMediumScreen(context, themeProvider);
+              } else {
+                return _buildSmallScreen(context, themeProvider);
+              }
+            },
           ),
         );
       },
     );
   }
 
-  Widget _buildLargeScreen(BuildContext context) {
+  Widget _buildLargeScreen(BuildContext context, ThemeProvider themeProvider) {
     return Column(
       children: [
-        _buildButtonGrid(context, crossAxisCount: 6), // 6 przycisków w rzędzie
         const SizedBox(height: 20),
-        _buildFormSection(),
-        _buildActionButtons(),
+        _buildButtonGrid(context, themeProvider, crossAxisCount: 6),
+        const SizedBox(height: 20),
+        _buildFormSection(themeProvider),
+        _buildActionButtons(themeProvider),
       ],
     );
   }
 
-  Widget _buildMediumScreen(BuildContext context) {
+  Widget _buildMediumScreen(BuildContext context, ThemeProvider themeProvider) {
     return Column(
       children: [
-        _buildButtonGrid(context, crossAxisCount: 3), // 3 przyciski w rzędzie
         const SizedBox(height: 20),
-        _buildFormSection(),
-        _buildActionButtons(),
+        _buildButtonGrid(context, themeProvider, crossAxisCount: 3),
+        const SizedBox(height: 20),
+        _buildFormSection(themeProvider),
+        _buildActionButtons(themeProvider),
       ],
     );
   }
 
-  Widget _buildSmallScreen(BuildContext context) {
+  Widget _buildSmallScreen(BuildContext context, ThemeProvider themeProvider) {
     return Column(
       children: [
-        _buildButtonGrid(context, crossAxisCount: 2), // 2 przyciski w rzędzie
         const SizedBox(height: 20),
-        _buildFormSection(),
-        _buildActionButtons(),
+        _buildButtonGrid(context, themeProvider, crossAxisCount: 2),
+        const SizedBox(height: 20),
+        _buildFormSection(themeProvider),
+        _buildActionButtons(themeProvider),
       ],
     );
   }
 
-  Widget _buildButtonGrid(BuildContext context, {required int crossAxisCount}) {
+  Widget _buildButtonGrid(BuildContext context, ThemeProvider themeProvider, {required int crossAxisCount}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: GridView.builder(
-        itemCount: _buildButtons(context).length,
+        itemCount: _buildButtons(context, themeProvider).length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount, // Ilość przycisków w rzędzie
-          crossAxisSpacing: 10, // Odstępy poziome
-          mainAxisSpacing: 10, // Odstępy pionowe
-          childAspectRatio: 6.5, // Stosunek szerokości do wysokości, aby kontrolować proporcje
+          crossAxisCount: crossAxisCount,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: 6.5,
         ),
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
-          return _buildButtons(context)[index];
+          return _buildButtons(context, themeProvider)[index];
         },
       ),
     );
   }
 
-  List<Widget> _buildButtons(BuildContext context) {
+  List<Widget> _buildButtons(BuildContext context, ThemeProvider themeProvider) {
     return [
-      _buildButton(context, 'Transport', 0),
-      _buildButton(context, 'Meal', 1),
-      _buildButton(context, 'Energy', 2),
-      _buildButton(context, 'Fashion', 3),
-      _buildButton(context, 'Purchase', 4),
-      _buildButton(context, 'Streaming', 5),
+      _buildButton(context, themeProvider, 'Transport', 0),
+      _buildButton(context, themeProvider, 'Meal', 1),
+      _buildButton(context, themeProvider, 'Energy', 2),
+      _buildButton(context, themeProvider, 'Fashion', 3),
+      _buildButton(context, themeProvider, 'Purchase', 4),
+      _buildButton(context, themeProvider, 'Streaming', 5),
     ];
   }
 
-  Widget _buildButton(BuildContext context, String text, int actionIndex) {
+  Widget _buildButton(BuildContext context, ThemeProvider themeProvider, String text, int actionIndex) {
     return SizedBox(
-      width: 100,  // Stała szerokość
-      height: 20,  // **Stała wysokość**
+      width: 100,
+      height: 20,
       child: ElevatedButton(
         onPressed: () {
           setState(() {
@@ -139,7 +144,9 @@ class _ActionPageState extends State<ActionsPage> {
           });
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: _selectedAction == actionIndex ? Theme.of(context).primaryColor : light(context),
+          backgroundColor: _selectedAction == actionIndex
+              ? Theme.of(context).primaryColor
+              : themeProvider.isDarkMode ? dark(context) : light(context), // Adjust button color based on theme
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
@@ -148,7 +155,7 @@ class _ActionPageState extends State<ActionsPage> {
           text,
           style: TextStyle(
             fontFamily: 'Inter Tight',
-            color: light(context),
+            color: themeProvider.isDarkMode ? light(context) : dark(context), // Adjust text color based on theme
             letterSpacing: 0.0,
           ),
         ),
@@ -156,7 +163,7 @@ class _ActionPageState extends State<ActionsPage> {
     );
   }
 
-  Widget _buildFormSection() {
+  Widget _buildFormSection(ThemeProvider themeProvider) {
     return Expanded(
       child: _selectedAction == 0
           ? TransportForm()
@@ -174,7 +181,7 @@ class _ActionPageState extends State<ActionsPage> {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(ThemeProvider themeProvider) {
     return _selectedAction != -1
         ? Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -183,12 +190,22 @@ class _ActionPageState extends State<ActionsPage> {
               children: [
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: const Text('Zatwierdź'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context), // Adjust button color based on theme
+                  ),
+                  child: Text(
+                    'Zatwierdź',
+                    style: TextStyle(
+                      color: themeProvider.isDarkMode ? light(context) : dark(context), // Adjust text color based on theme
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _resetForm,
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                  ),
                   child: const Text('Anuluj'),
                 ),
               ],
