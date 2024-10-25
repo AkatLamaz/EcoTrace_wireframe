@@ -44,7 +44,7 @@ class OverViewPage extends StatelessWidget {
               ),
             ),
           ),
-          backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context), // Adjust background color based on theme
+          backgroundColor: themeProvider.isDarkMode ? shadowColor(context) : light(context), // Adjust background color based on theme
         );
       },
     );
