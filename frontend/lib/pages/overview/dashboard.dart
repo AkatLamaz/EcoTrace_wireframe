@@ -119,24 +119,52 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                       const SizedBox(height: 20),
                       // Sekcja z wyborem miesięcy
                       SizedBox(
-                        width: double.infinity, // Ograniczenie szerokości
+                        width: double.infinity,
                         child: Wrap(
                           alignment: WrapAlignment.center,
-                          spacing: 8.0,
+                          spacing: 12.0,
+                          runSpacing: 12.0,
                           children: months.map((month) {
-                            return ChoiceChip(
-                              label: Text(
-                                month,
-                                style: TextStyle(
-                                  color: themeProvider.isDarkMode ? light(context) : dark(context), // Adjust text color based on theme
+                            final isSelected = selectedMonth == month;
+                            return SizedBox(
+                              height: 36,
+                              child: ElevatedButton(
+                                onPressed: () => _selectMonth(month),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: isSelected 
+                                      ? active 
+                                      : themeProvider.isDarkMode
+                                          ? cardBackgroundColor
+                                          : Colors.white,
+                                  foregroundColor: isSelected
+                                      ? Colors.white
+                                      : themeProvider.isDarkMode
+                                          ? Colors.white
+                                          : dark(context),
+                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    side: BorderSide(
+                                      color: isSelected
+                                          ? Colors.transparent
+                                          : themeProvider.isDarkMode
+                                              ? Colors.white.withOpacity(0.1)
+                                              : lightGrey(context).withOpacity(0.3),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  elevation: isSelected ? 2 : 0,
+                                  shadowColor: shadowColor(context),
+                                ),
+                                child: Text(
+                                  month,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
                               ),
-                              selected: selectedMonth == month,
-                              onSelected: (bool selected) {
-                                _selectMonth(month);
-                              },
-                              selectedColor: themeProvider.isDarkMode ? Colors.blue[700] : Colors.blue,
-                              backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context), // Adjust background color based on theme
                             );
                           }).toList(),
                         ),

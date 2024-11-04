@@ -16,10 +16,10 @@ class EmissionsPage extends StatelessWidget {
             title: const Text('Emissions'),
             backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
             iconTheme: IconThemeData(
-              color: themeProvider.isDarkMode ? light(context) : dark(context), // Change arrow color based on theme
+              color: themeProvider.isDarkMode ? light(context) : dark(context),
             ),
             titleTextStyle: TextStyle(
-              color: themeProvider.isDarkMode ? light(context) : dark(context), // Change title text color based on theme
+              color: themeProvider.isDarkMode ? light(context) : dark(context),
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -28,6 +28,7 @@ class EmissionsPage extends StatelessWidget {
             constraints: const BoxConstraints(maxHeight: 700),
             child: Card(
               elevation: 8,
+              color: themeProvider.isDarkMode ? cardBackgroundColor : Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -38,7 +39,9 @@ class EmissionsPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.1),
+                      color: themeProvider.isDarkMode 
+                          ? Colors.green.withOpacity(0.2)
+                          : Colors.green.withOpacity(0.1),
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20),
@@ -49,17 +52,19 @@ class EmissionsPage extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.2),
+                            color: themeProvider.isDarkMode
+                                ? Colors.green.withOpacity(0.3)
+                                : Colors.green.withOpacity(0.2),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(Icons.eco, color: Colors.green, size: 30),
                         ),
                         const SizedBox(width: 16),
-                        const Expanded(
+                        Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 'Dzisiaj zaoszczędziłeś X śladu węglowego!',
                                 style: TextStyle(
                                   fontSize: 20,
@@ -67,10 +72,15 @@ class EmissionsPage extends StatelessWidget {
                                   color: Colors.green,
                                 ),
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Text(
                                 'To o 20% mniej niż średnia światowa.',
-                                style: TextStyle(fontSize: 16),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: themeProvider.isDarkMode
+                                      ? lightGrey(context)
+                                      : dark(context),
+                                ),
                               ),
                             ],
                           ),
@@ -78,8 +88,8 @@ class EmissionsPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.all(20),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -88,18 +98,23 @@ class EmissionsPage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            color: themeProvider.isDarkMode
+                                ? Colors.white
+                                : dark(context),
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
                           'Wykres pokazuje miesięczne zużycie CO₂',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey,
+                            color: themeProvider.isDarkMode
+                                ? lightGrey(context)
+                                : Colors.grey,
                           ),
                         ),
-                        SizedBox(height: 20),
-                        SizedBox(
+                        const SizedBox(height: 20),
+                        const SizedBox(
                           height: 400,
                           child: LineChartCard(),
                         ),

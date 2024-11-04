@@ -53,6 +53,22 @@ class LineData {
   FlSpot(120, 34.60),   
   ];
 
+  final averageSpots = const [
+    FlSpot(0, 45.04),
+    FlSpot(10, 44.23),
+    FlSpot(20, 43.57),
+    FlSpot(30, 48.58),
+    FlSpot(40, 47.18),
+    FlSpot(50, 85.00),
+    FlSpot(60, 82.98),
+    FlSpot(70, 79.43),
+    FlSpot(80, 72.43),
+    FlSpot(90, 48.80),
+    FlSpot(100, 46.64),
+    FlSpot(110, 62.60),
+    FlSpot(120, 45.60),
+  ];
+
   final leftTitle = {
     0: '0',
     20: '2K',
