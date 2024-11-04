@@ -184,29 +184,59 @@ class _ActionPageState extends State<ActionsPage> {
   Widget _buildActionButtons(ThemeProvider themeProvider) {
     return _selectedAction != -1
         ? Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context), // Adjust button color based on theme
-                  ),
-                  child: Text(
-                    'Zatwierdź',
-                    style: TextStyle(
-                      color: themeProvider.isDarkMode ? light(context) : dark(context), // Adjust text color based on theme
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _submitForm,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: active,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 2,
+                    ),
+                    child: const Text(
+                      'Zatwierdź',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: _resetForm,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _resetForm,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Theme.of(context).brightness == Brightness.light
+                          ? dark(context)
+                          : Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(
+                          color: Theme.of(context).brightness == Brightness.light
+                              ? lightGrey(context)
+                              : Colors.white.withOpacity(0.2),
+                        ),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'Anuluj',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                  child: const Text('Anuluj'),
                 ),
               ],
             ),

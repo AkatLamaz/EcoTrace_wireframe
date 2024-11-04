@@ -72,9 +72,9 @@ class _EnergyFormState extends State<EnergyForm> {
                   }, _emissionFactors.keys.toList()),
                   _buildTextField('Consumption (${_units[_selectedEnergyType]})', _consumptionController),
                   const SizedBox(height: 16),
-                  ElevatedButton(
+                  _buildActionButton(
+                    text: 'Calculate Emissions',
                     onPressed: _calculateEmissions,
-                    child: const Text('Calculate Emissions'),
                   ),
                   const SizedBox(height: 16),
                   _buildEmissionResult('$_selectedEnergyType CO₂ Emission', _co2Emission),
@@ -88,65 +88,215 @@ class _EnergyFormState extends State<EnergyForm> {
   }
 
   Widget _buildDropdownSearchField(String label, String selectedValue, ValueChanged<String> onChanged, List<String> items) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label),
-        const SizedBox(height: 8),
-        DropdownButtonFormField<String>(
-          value: selectedValue.isEmpty ? null : selectedValue,
-          items: items.map((item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Text(item),
-            );
-          }).toList(),
-          onChanged: (String? value) {
-            if (value != null) {
-              onChanged(value);
-            }
-          },
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            filled: true,
-            fillColor: Colors.grey[200],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).brightness == Brightness.light 
+                  ? dark(context) 
+                  : lightGrey(context),
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 8),
+          DropdownButtonFormField<String>(
+            value: selectedValue.isEmpty ? null : selectedValue,
+            items: items.map((item) {
+              return DropdownMenuItem<String>(
+                value: item,
+                child: Text(
+                  item,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.light 
+                        ? dark(context) 
+                        : Colors.white,
+                  ),
+                ),
+              );
+            }).toList(),
+            onChanged: (String? value) {
+              if (value != null) {
+                onChanged(value);
+              }
+            },
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: lightGrey(context).withOpacity(0.5),
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: lightGrey(context).withOpacity(0.5),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: active,
+                  width: 2,
+                ),
+              ),
+              filled: true,
+              fillColor: Theme.of(context).brightness == Brightness.light 
+                  ? Colors.white 
+                  : cardBackgroundColor,
+            ),
+            icon: Icon(
+              Icons.arrow_drop_down,
+              color: lightGrey(context),
+            ),
+            dropdownColor: Theme.of(context).brightness == Brightness.light 
+                ? Colors.white 
+                : cardBackgroundColor,
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label),
-        const SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(5),
-          ],
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            filled: true,
-            fillColor: Colors.grey[200],
+  Widget _buildTextField(String label, TextEditingController controller, {bool isNumber = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).brightness == Brightness.light 
+                  ? dark(context) 
+                  : lightGrey(context),
+            ),
           ),
-        ),
-        const SizedBox(height: 16),
-      ],
+          const SizedBox(height: 8),
+          TextField(
+            controller: controller,
+            keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+            inputFormatters: isNumber
+                ? <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(5),
+                  ]
+                : null,
+            style: TextStyle(
+              color: Theme.of(context).brightness == Brightness.light 
+                  ? dark(context) 
+                  : Colors.white,
+            ),
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: lightGrey(context).withOpacity(0.5),
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: lightGrey(context).withOpacity(0.5),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: active,
+                  width: 2,
+                ),
+              ),
+              filled: true,
+              fillColor: Theme.of(context).brightness == Brightness.light 
+                  ? Colors.white 
+                  : cardBackgroundColor,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildEmissionResult(String label, double value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('$label: ${value.toStringAsFixed(2)} kg CO₂'),
-        const SizedBox(height: 8),
-      ],
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.light 
+            ? Colors.white 
+            : cardBackgroundColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: lightGrey(context).withOpacity(0.5),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).brightness == Brightness.light 
+                  ? dark(context) 
+                  : lightGrey(context),
+            ),
+          ),
+          Text(
+            '${value.toStringAsFixed(2)} kg CO₂',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: active,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required String text,
+    required VoidCallback onPressed,
+    bool isPrimary = true,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isPrimary ? active : Colors.transparent,
+          foregroundColor: isPrimary 
+              ? Colors.white 
+              : Theme.of(context).brightness == Brightness.light
+                  ? dark(context)
+                  : Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: isPrimary 
+                ? BorderSide.none
+                : BorderSide(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? lightGrey(context)
+                        : Colors.white.withOpacity(0.2),
+                  ),
+          ),
+          elevation: isPrimary ? 2 : 0,
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
     );
   }
 }

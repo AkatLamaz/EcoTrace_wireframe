@@ -142,68 +142,156 @@ class _TransportFormState extends State<TransportForm> {
   }
 
   Widget _buildDropdownSearchField(String label, String selectedValue, ValueChanged<String> onChanged, List<String> items) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label),
-        const SizedBox(height: 8),
-        DropdownSearch<String>(
-          items: items,
-          selectedItem: selectedValue.isEmpty ? null : selectedValue,
-          onChanged: (String? value) {
-            if (value != null) {
-              onChanged(value);
-            }
-          },
-          dropdownDecoratorProps: DropDownDecoratorProps(
-            dropdownSearchDecoration: InputDecoration(
-              labelText: label,
-              border: const OutlineInputBorder(),
-              filled: true,
-              fillColor: Colors.grey[200],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).brightness == Brightness.light 
+                  ? dark(context) 
+                  : lightGrey(context),
             ),
           ),
-          popupProps: PopupProps.menu(
-            showSearchBox: true,
-            constraints: const BoxConstraints(maxHeight: 300), 
-            searchFieldProps: TextFieldProps(
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                labelText: 'Search $label',
+          const SizedBox(height: 8),
+          DropdownSearch<String>(
+            items: items,
+            selectedItem: selectedValue.isEmpty ? null : selectedValue,
+            onChanged: (String? value) {
+              if (value != null) {
+                onChanged(value);
+              }
+            },
+            dropdownDecoratorProps: DropDownDecoratorProps(
+              dropdownSearchDecoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: lightGrey(context).withOpacity(0.5),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: lightGrey(context).withOpacity(0.5),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: active,
+                    width: 2,
+                  ),
+                ),
+                filled: true,
+                fillColor: Theme.of(context).brightness == Brightness.light 
+                    ? Colors.white 
+                    : cardBackgroundColor,
+              ),
+            ),
+            popupProps: PopupProps.menu(
+              showSearchBox: true,
+              constraints: const BoxConstraints(maxHeight: 300),
+              searchFieldProps: TextFieldProps(
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  labelText: 'Search $label',
+                  labelStyle: TextStyle(color: lightGrey(context)),
+                  prefixIcon: Icon(Icons.search, color: lightGrey(context)),
+                ),
+              ),
+              menuProps: MenuProps(
+                backgroundColor: Theme.of(context).brightness == Brightness.light 
+                    ? Colors.white 
+                    : cardBackgroundColor,
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildDropdownField(String label, String selectedValue, ValueChanged<String> onChanged, List<String> items) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label),
-        const SizedBox(height: 8),
-        DropdownButtonFormField<String>(
-          value: selectedValue.isEmpty ? null : selectedValue,
-          items: items.map((item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Text(item),
-            );
-          }).toList(),
-          onChanged: (String? value) {
-            if (value != null) {
-              onChanged(value);
-            }
-          },
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            filled: true,
-            fillColor: Colors.grey[200],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).brightness == Brightness.light 
+                  ? dark(context) 
+                  : lightGrey(context),
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 8),
+          DropdownButtonFormField<String>(
+            value: selectedValue.isEmpty ? null : selectedValue,
+            items: items.map((item) {
+              return DropdownMenuItem<String>(
+                value: item,
+                child: Text(
+                  item,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.light 
+                        ? dark(context) 
+                        : Colors.white,
+                  ),
+                ),
+            );
+            }).toList(),
+            onChanged: (String? value) {
+              if (value != null) {
+                onChanged(value);
+              }
+            },
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: lightGrey(context).withOpacity(0.5),
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: lightGrey(context).withOpacity(0.5),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: active,
+                  width: 2,
+                ),
+              ),
+              filled: true,
+              fillColor: Theme.of(context).brightness == Brightness.light 
+                  ? Colors.white 
+                  : cardBackgroundColor,
+            ),
+            icon: Icon(
+              Icons.arrow_drop_down,
+              color: lightGrey(context),
+            ),
+            dropdownColor: Theme.of(context).brightness == Brightness.light 
+                ? Colors.white 
+                : cardBackgroundColor,
+          ),
+        ],
+      ),
     );
   }
 }

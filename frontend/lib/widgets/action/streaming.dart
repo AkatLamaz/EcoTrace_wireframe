@@ -61,9 +61,9 @@ class _StreamingFormState extends State<StreamingForm> {
                   }, _emissionFactors.keys.toList()),
                   _buildTextField('Hours Watched', _hoursController),
                   const SizedBox(height: 16),
-                  ElevatedButton(
+                  _buildActionButton(
+                    text: 'Calculate Emissions',
                     onPressed: _calculateEmissions,
-                    child: const Text('Calculate Emissions'),
                   ),
                   const SizedBox(height: 16),
                   _buildEmissionResult('$_selectedStreamingService CO₂ Emission', _co2Emission),
@@ -130,12 +130,78 @@ class _StreamingFormState extends State<StreamingForm> {
   }
 
   Widget _buildEmissionResult(String label, double value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('$label: ${value.toStringAsFixed(2)} kg CO₂'),
-        const SizedBox(height: 8),
-      ],
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.light 
+            ? Colors.white 
+            : cardBackgroundColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: lightGrey(context).withOpacity(0.5),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).brightness == Brightness.light 
+                  ? dark(context) 
+                  : lightGrey(context),
+            ),
+          ),
+          Text(
+            '${value.toStringAsFixed(2)} kg CO₂',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: active,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required String text,
+    required VoidCallback onPressed,
+    bool isPrimary = true,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isPrimary ? active : Colors.transparent,
+          foregroundColor: isPrimary 
+              ? Colors.white 
+              : Theme.of(context).brightness == Brightness.light
+                  ? dark(context)
+                  : Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: isPrimary 
+                ? BorderSide.none
+                : BorderSide(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? lightGrey(context)
+                        : Colors.white.withOpacity(0.2),
+                  ),
+          ),
+          elevation: isPrimary ? 2 : 0,
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
     );
   }
 }
