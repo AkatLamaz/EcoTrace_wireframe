@@ -3,6 +3,8 @@ import 'package:flutter_web_tutorial2/constants/style.dart';
 import 'package:flutter_web_tutorial2/widgets/custom_text.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_web_tutorial2/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   @override
@@ -21,36 +23,43 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 400),
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      "Forgot Password",
-                      style: GoogleFonts.roboto(
-                          fontSize: 30, fontWeight: FontWeight.bold),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 15),
-                if (!_codeSent) _buildEmailField(),
-                if (_codeSent && !_codeVerified) _buildCodeVerificationField(),
-                if (_codeVerified) ...[
-                  _buildPasswordField(),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) => Scaffold(
+        body: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Forgot Password",
+                        style: GoogleFonts.roboto(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: themeProvider.isDarkMode
+                              ? Colors.white
+                              : dark(context),
+                        ),
+                      )
+                    ],
+                  ),
                   const SizedBox(height: 15),
-                  _buildConfirmPasswordField(),
+                  if (!_codeSent) _buildEmailField(),
+                  if (_codeSent && !_codeVerified) _buildCodeVerificationField(),
+                  if (_codeVerified) ...[
+                    _buildPasswordField(),
+                    const SizedBox(height: 15),
+                    _buildConfirmPasswordField(),
+                  ],
+                  const SizedBox(height: 15),
+                  _buildActionButton(),
                 ],
-                const SizedBox(height: 15),
-                _buildActionButton(),
-              ],
+              ),
             ),
           ),
         ),
@@ -59,22 +68,57 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   Widget _buildEmailField() {
-    return TextFormField(
-      controller: _emailController,
-      decoration: InputDecoration(
-        labelText: "Email",
-        hintText: "abc@domain.com",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) => TextFormField(
+        controller: _emailController,
+        style: TextStyle(
+          color: themeProvider.isDarkMode
+              ? Colors.white
+              : dark(context),
+        ),
+        decoration: InputDecoration(
+          labelText: "Email",
+          labelStyle: TextStyle(
+            color: themeProvider.isDarkMode
+                ? lightGrey(context)
+                : dark(context),
+          ),
+          hintText: "abc@domain.com",
+          hintStyle: TextStyle(
+            color: themeProvider.isDarkMode
+                ? Colors.grey[400]
+                : Colors.grey[600],
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(
+              color: themeProvider.isDarkMode
+                  ? Colors.white.withOpacity(0.2)
+                  : lightGrey(context),
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: active),
+          ),
+          fillColor: themeProvider.isDarkMode
+              ? cardBackgroundColor
+              : Colors.white,
+          filled: true,
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your email';
+          }
+          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+            return 'Please enter a valid email';
+          }
+          return null;
+        },
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter your email';
-        }
-        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-          return 'Please enter a valid email';
-        }
-        return null;
-      },
     );
   }
 
