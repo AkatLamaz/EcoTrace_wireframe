@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_web_tutorial2/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_tutorial2/pages/authentication/authentication.dart';
+import 'package:flutter_web_tutorial2/services/auth_service.dart';
 
 // ignore: use_key_in_widget_constructors
 class RegistrationPage extends StatefulWidget {
@@ -26,10 +27,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return regex.hasMatch(password);
   }
 
-  void register() {
+  void register() async {
     if (_formKey.currentState!.validate()) {
-      // Jeśli formularz jest poprawny, można przeprowadzić rejestrację użytkownika
-      Get.snackbar('Success', 'Registration successful');
+      try {
+        final authService = AuthService();
+        await authService.register(
+          emailController.text,
+          passwordController.text,
+        );
+        Get.snackbar(
+          'Success', 
+          'Registration successful',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+        Get.offAllNamed(AuthentitcationPageRoute);
+      } catch (e) {
+        Get.snackbar(
+          'Error',
+          e.toString(),
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
     }
   }
 

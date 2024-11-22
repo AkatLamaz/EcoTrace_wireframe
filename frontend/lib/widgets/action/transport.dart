@@ -4,6 +4,8 @@ import '../../theme_provider.dart';
 import '../../constants/style.dart';
 import '/data/vehicle_service.dart'; 
 import 'package:dropdown_search/dropdown_search.dart'; 
+import 'package:get/get.dart';
+import '../../services/actions_service.dart';
 
 class TransportForm extends StatefulWidget {
   @override
@@ -22,11 +24,19 @@ class _TransportFormState extends State<TransportForm> {
   String _selectedDivision = '';
   String _selectedModelYear = '';
   String _selectedFuelType = '';
+  final TextEditingController _kilometersController = TextEditingController();
+  String? _kilometersError;
 
   @override
   void initState() {
     super.initState();
     _loadData();
+  }
+
+  @override
+  void dispose() {
+    _kilometersController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadData() async {
@@ -72,6 +82,78 @@ class _TransportFormState extends State<TransportForm> {
     }
     if (!_filteredFuelTypes.contains(_selectedFuelType)) {
       _selectedFuelType = '';
+    }
+  }
+
+  void _validateKilometers(String value) {
+    setState(() {
+      if (value.isEmpty) {
+        _kilometersError = 'Pole jest wymagane';
+      } else {
+        try {
+          double kilometers = double.parse(value);
+          if (kilometers <= 0) {
+            _kilometersError = 'Wartość musi być większa niż 0';
+          } else if (kilometers > 1000000) {
+            _kilometersError = 'Wartość jest zbyt duża';
+          } else {
+            _kilometersError = null;
+          }
+        } catch (e) {
+          _kilometersError = 'Wprowadź prawidłową liczbę';
+        }
+      }
+    });
+  }
+
+  Future<void> _submitForm() async {
+    if (_kilometersError != null) return;
+    
+    if (_selectedDivision.isEmpty || 
+        _selectedModelName.isEmpty || 
+        _selectedModelYear.isEmpty || 
+        _selectedFuelType.isEmpty || 
+        _kilometersController.text.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please fill in all fields',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+    
+    try {
+      final actionsService = ActionsService();
+      await actionsService.addTransportAction({
+        'division': _selectedDivision,
+        'model': _selectedModelName,
+        'year': _selectedModelYear,
+        'fuelType': _selectedFuelType,
+        'kilometers': double.parse(_kilometersController.text),
+      });
+      
+      Get.snackbar(
+        'Success',
+        'Transport action saved successfully',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+      
+      setState(() {
+        _selectedDivision = '';
+        _selectedModelName = '';
+        _selectedModelYear = '';
+        _selectedFuelType = '';
+        _kilometersController.clear();
+      });
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        e.toString(),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
@@ -130,6 +212,82 @@ class _TransportFormState extends State<TransportForm> {
                           }, _filteredFuelTypes),
                         ),
                       ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Kilometers traveled',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: themeProvider.isDarkMode 
+                                  ? lightGrey(context)
+                                  : dark(context),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _kilometersController,
+                            keyboardType: TextInputType.numberWithOptions(decimal: true),
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: themeProvider.isDarkMode
+                                      ? Colors.white.withOpacity(0.1)
+                                      : lightGrey(context).withOpacity(0.5),
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: themeProvider.isDarkMode
+                                      ? Colors.white.withOpacity(0.1)
+                                      : lightGrey(context).withOpacity(0.5),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: active,
+                                  width: 2,
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: themeProvider.isDarkMode
+                                  ? cardBackgroundColor
+                                  : Colors.white,
+                              errorText: _kilometersError,
+                              suffixText: 'km',
+                            ),
+                            onChanged: _validateKilometers,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: ElevatedButton(
+                        onPressed: _submitForm,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: active,
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Save Transport Action',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

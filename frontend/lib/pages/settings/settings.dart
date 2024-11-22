@@ -7,15 +7,53 @@ import 'package:get/get.dart'; // Dodaj import GetX
 import 'package:provider/provider.dart';
 import '../../constants/style.dart';
 import '../../theme_provider.dart';
+import '../../services/user_service.dart';
 
 
 class SettingsController extends GetxController {
-  final name = 'Jan Kowalski'.obs;
+  UserService userService = UserService();
+  final name = ''.obs;
   final birthDate = DateTime.now().obs;
-  final gender = 'Mężczyzna'.obs;
-  final email = 'mail@mail.com'.obs;
-  final phone = '111111111'.obs;
+  final gender = ''.obs;
+  final email = ''.obs;
+  final phone = ''.obs;
   final Rx<XFile?> profileImage = Rx<XFile?>(null);
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    try {
+      final profile = await userService.getUserProfile();
+      name.value = profile['name'] ?? '';
+      email.value = profile['email'] ?? '';
+      phone.value = profile['phone'] ?? '';
+      gender.value = profile['gender'] ?? '';
+      if (profile['birthDate'] != null) {
+        birthDate.value = DateTime.parse(profile['birthDate']);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to load profile');
+    }
+  }
+
+  Future<void> saveProfile() async {
+    try {
+      await userService.updateUserProfile({
+        'name': name.value,
+        'email': email.value,
+        'phone': phone.value,
+        'gender': gender.value,
+        'birthDate': birthDate.value.toIso8601String(),
+      });
+      Get.snackbar('Success', 'Profile updated successfully');
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to update profile');
+    }
+  }
 
   void updateName(String value) {
     if (value.length <= 50) {
