@@ -15,13 +15,15 @@ class SideMenu extends StatelessWidget {
 
    @override
   Widget build(BuildContext context) {
+    print("Building SideMenu");
     double width = MediaQuery.of(context).size.width;
 
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
+        print("SideMenu Consumer builder called with isDarkMode: ${themeProvider.isDarkMode}");
         return Container(
             decoration: BoxDecoration(
-            color: themeProvider.isDarkMode ? dark(context) : light(context), // Use theme-aware colors
+              color: themeProvider.isDarkMode ? dark(context) : navBackgroundColor,
             ),
             child: ListView(
               children: [
@@ -59,24 +61,28 @@ class SideMenu extends StatelessWidget {
                 Divider(color: lightGrey(context).withAlpha((0.1 * 255).toInt()), ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: sideMenuItems.map((item) => SideMenuItem(
-                itemName: item.name,
-                onTap: (){
-                  if(item.route == AuthentitcationPageRoute){
-                    menuController.changeActiveitemTo(OverViewPageDisplayName);
-                    Get.offAllNamed(AuthentitcationPageRoute);
-                    //Get.offAll(() => AuthenticationPage()); old method
-                  }
+                  children: sideMenuItems.map((item) {
+                    print("Creating SideMenuItem for: ${item.name}");
+                    return SideMenuItem(
+                      itemName: item.name,
+                      onTap: () {
+                        print("SideMenuItem ${item.name} tapped");
+                        if(item.route == AuthentitcationPageRoute){
+                          menuController.changeActiveitemTo(OverViewPageDisplayName);
+                          Get.offAllNamed(AuthentitcationPageRoute);
+                          //Get.offAll(() => AuthenticationPage()); old method
+                        }
 
-                  if(!menuController.isActive(item.name)){
-                    menuController.changeActiveitemTo(item.name);
-                    if(ResponsiveWidget.isSmallScreen(context))
-                      // ignore: curly_braces_in_flow_control_structures
-                      Get.back();
-                    navigationController.navigateTo(item.route);
-                  }
-                },
-              )).toList(),
+                        if(!menuController.isActive(item.name)){
+                          menuController.changeActiveitemTo(item.name);
+                          if(ResponsiveWidget.isSmallScreen(context))
+                            // ignore: curly_braces_in_flow_control_structures
+                            Get.back();
+                          navigationController.navigateTo(item.route);
+                        }
+                      },
+                    );
+                  }).toList(),
                 )
               ],
             ),

@@ -175,7 +175,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                           mainAxisSize: MainAxisSize.min,  // Ensures the column takes up minimal space
                           children: [
                             SizedBox(
-                              child: ScopeWidget(data: getSampleData()),
+                              child: ScopeWidget(data: getSampleData(context)),
                             ),
                             const SizedBox(height: 20),
                             LayoutBuilder(

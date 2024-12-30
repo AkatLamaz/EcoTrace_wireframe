@@ -20,6 +20,7 @@ class ActionsPage extends StatefulWidget {
 class _ActionPageState extends State<ActionsPage> {
   int _selectedAction = -1;
   final Map<String, dynamic> _formData = {};
+  final _cache = <String, dynamic>{};
 
   void _resetForm() {
     setState(() {

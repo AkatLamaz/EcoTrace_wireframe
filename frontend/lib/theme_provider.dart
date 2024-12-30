@@ -6,6 +6,7 @@ class ThemeProvider extends ChangeNotifier {
   bool get isDarkMode => themeMode == ThemeMode.dark;
 
   void toggleTheme(bool isOn) {
+    print("ThemeProvider: Toggling theme to ${isOn ? 'dark' : 'light'}");
     themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
     notifyListeners();
   }

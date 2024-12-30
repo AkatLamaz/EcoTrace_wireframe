@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web_tutorial2/constants/style.dart';
 import 'package:flutter_web_tutorial2/routing/routes.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import '../theme_provider.dart';
 
 class MenuController extends GetxController {
   static MenuController instance = Get.find();
@@ -18,28 +20,51 @@ class MenuController extends GetxController {
 
   isHovering(String itemName) => hoverItem.value == itemName;
 
-  isActive(String itemName) => activeItem.value == itemName; 
+  isActive(String itemName) => activeItem.value == itemName;
 
   Widget returnIconFor(String itemName) {
-    switch (itemName) {
-      case OverViewPageDisplayName:
-        return _customIcon(Icons.trending_up, itemName);
-      case ActionViewPageDisplayName:
-        return _customIcon(Icons.drive_eta, itemName);
-      case EmissionsViewPageDisplayName:
-        return _customIcon(Icons.people_alt_outlined, itemName);
-      case AuthentitcationPageDisplayName:
-        return _customIcon(Icons.exit_to_app, itemName);
-      case SettingsPageDisplayName: // Dodano stronę ustawień
-        return _customIcon(Icons.settings, itemName);
-      default:
-        return _customIcon(Icons.exit_to_app, itemName);
-    }
-  }
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, _) {
+        IconData icon;
+        switch (itemName) {
+          case OverViewPageDisplayName:
+            icon = Icons.trending_up;
+            break;
+          case ActionViewPageDisplayName:
+            icon = Icons.drive_eta;
+            break;
+          case EmissionsViewPageDisplayName:
+            icon = Icons.people_alt_outlined;
+            break;
+          case AuthentitcationPageDisplayName:
+            icon = Icons.exit_to_app;
+            break;
+          case SettingsPageDisplayName:
+            icon = Icons.settings;
+            break;
+          default:
+            icon = Icons.exit_to_app;
+        }
 
-  Widget _customIcon(IconData icon, String itemName) {
-    if (isActive(itemName)) return Icon(icon, size: 22, color: dark(Get.context!));
+        if (isActive(itemName)) {
+          return Icon(
+            icon, 
+            size: 22, 
+            color: themeProvider.isDarkMode ? Colors.white : dark(Get.context!)
+          );
+        }
 
-    return Icon(icon, color: isHovering(itemName) ? dark(Get.context!) : lightGrey(Get.context!));
+        return Icon(
+          icon, 
+          color: isHovering(itemName) 
+              ? themeProvider.isDarkMode
+                  ? Colors.white 
+                  : dark(Get.context!)
+              : themeProvider.isDarkMode
+                  ? Colors.white.withOpacity(0.7)
+                  : lightGrey(Get.context!)
+        );
+      }
+    );
   }
 }

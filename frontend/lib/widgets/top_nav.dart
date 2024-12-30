@@ -15,6 +15,7 @@ Consumer<ThemeProvider> topNavigationBar(BuildContext context, GlobalKey<Scaffol
   return Consumer<ThemeProvider>(
     builder: (context, themeProvider, child) {
       return AppBar(
+        backgroundColor: themeProvider.isDarkMode ? dark(context) : navBackgroundColor,
         leading: !ResponsiveWidget.isSmallScreen(context)
             ? Row(
                 children: [
@@ -127,7 +128,6 @@ Consumer<ThemeProvider> topNavigationBar(BuildContext context, GlobalKey<Scaffol
           ],
         ),
         iconTheme: IconThemeData(color: themeProvider.isDarkMode ? light(context) : dark(context)),
-        backgroundColor: themeProvider.isDarkMode ? dark(context) : light(context),
       );
     },
   );

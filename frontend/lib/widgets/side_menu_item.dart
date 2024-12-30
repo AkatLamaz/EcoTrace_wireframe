@@ -7,18 +7,26 @@ class SideMenuItem extends StatelessWidget {
   final String itemName;
   final Function() onTap;
 
-  // ignore: use_super_parameters
   const SideMenuItem({Key? key, required this.itemName, required this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (ResponsiveWidget.isCustomScreen(context)) {
-      return VertticalMenuItem(
+    print("Building SideMenuItem for: $itemName");
+    
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isCustomScreen = ResponsiveWidget.isCustomScreen(context);
+    print("Screen width: $screenWidth");
+    print("isCustomScreen for $itemName: $isCustomScreen");
+    
+    if (isCustomScreen) {
+      print("Rendering VerticalMenuItem for: $itemName");
+      return VerticalMenuItem(
         itemName: itemName,
         onTap: onTap,
       );
     } else {
+      print("Rendering HorizontalMenuItem for: $itemName");
       return HorizontalMenuItem(
         itemName: itemName,
         onTap: onTap,

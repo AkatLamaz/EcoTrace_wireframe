@@ -13,7 +13,7 @@ class ScopePieChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
-        List<PieChartSectionData> sections = getSampleData().map((data) {
+        List<PieChartSectionData> sections = getSampleData(context).map((data) {
           Color color;
           switch (data.category) {
             case 'Scope 1':

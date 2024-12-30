@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_web_tutorial2/services/auth_service.dart';
-import 'package:flutter_web_tutorial2/constants/endpoints.dart';
+//import 'package:flutter_web_tutorial2/constants/endpoints.dart';
 import 'package:mockito/mockito.dart';
 import 'mocks.mocks.dart';
 import 'dart:convert';
